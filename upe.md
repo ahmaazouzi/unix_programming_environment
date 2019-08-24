@@ -5,6 +5,17 @@
 - I will use macOS 10.x to test the scripts provided in the book and probably report if they are still relevant.
 - I might skip the few commands and things I already know about how to use the terminal.
 
+- [Preface/Trivia](#preface/trivia)
+- [Chapter 1: Unix for Beginners](#chapter-1-unix-for-beginners)
+- [Chapter 2: ]()
+- [Chapter 3: ]()
+- [Chapter 4: Filters](#filters)
+- [Chapter 5: ]()
+- [Chapter 6: ]()
+- [Chapter 7: ]()
+- [Chapter 8: ]()
+- [Chapter 9: ]()
+
 ## PREFACE/TRIVIA:
 - Unix was created in 1969 in Bell Labs and rewritten in C in 1973. In 1974, it was licensed to universities (the so called BSD).
 - Unix is successful because of its portability, the fact that it's written in C, a high level language. 
@@ -45,6 +56,7 @@
 	* `w <filename>`: save to named file
 	* `q`: quit ed.
 	* `1,$p`: prints to screen contents of file from line 1 to last line
+	* `g/<regular-expression>/p`: same as grep.
 - Weird thing is that when I open a file with ed, I can't see any of the text previously written into it.
 - `ls`, which is used for listing files in a directory has many options. An interesting one is `-t` which lists files by time they were last modified and not alphabetically. `-l` list long info lines which include who owns the files and where they were created. `-r` reverses the order files are listed in. Options can be combined so `ls -lrt` lists long descriptions of files according when they were last modified in reverse order.
 - Options have to precede file names. 
@@ -52,17 +64,16 @@
 - Options in unix are not uniform between different commands, so `-l` means something in one command and a totally different thing in another commands.
 - `cat` and `pr` print the contents of a file or several files to screen. `pr` cut content into pages and put dates on top of pages
 - `lp` and `lpr` are used for printing. I don't know if this is still relevant!
+- **File path manipulation:** 
+	* `mv`: moves a file from one location to another or simply renames a file, or replace target with the moved file.
+	* `cp`: copy the contents of a file into another.
+	* `rm`: removes an existing file a warning a files doesn't exist.
+- file names should only be composed of underscores, letters and numbers...etc. Periods are used in extensions...
+- More **file processing** commands::
+	* `wc`: spits out the count of lines, words and characters in a file or a group of files.
+	* **Grep:** `grep` which is used to grab lines containing patterns originates from the ed command `g/<regular-expression>/p`. Used with the option -v, it grabs the lines not containing the provided regular-expression. ch re on grep is on [chapter 4](#chapter-4-filters).
+	* `sort` sorts a file line by line alphabetically. There are many options to make sort more useful.
+	* `tail` in its defaul form it prints the last lines of a file, but the number of the last lines can be specified as in `tail -4`.
 
 
 
-
-
-
-
-
-
-
-
-
-
- 
