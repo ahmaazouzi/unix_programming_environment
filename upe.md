@@ -48,7 +48,7 @@
 - Chatting with other users of the same system can be done with e.g. `write Ahmed`. To exit chat, type `ctl-d`.
 - **The manual**: The book doesn't say much more than what I already know `man`. I need to work on this on my own.
 
-### 1.1 Files and common commands:
+### 1.2 Files and common commands:
 - Information is stored in files which have names, content, locations and metadata such as who owns them.
 - **ed 101:** ed is an old text editor, much older than both vi and emacs. Basic commands of ed:
 	* `a`: start adding text.
@@ -73,7 +73,20 @@
 	* `wc`: spits out the count of lines, words and characters in a file or a group of files.
 	* **Grep:** `grep` which is used to grab lines containing patterns originates from the ed command `g/<regular-expression>/p`. Used with the option -v, it grabs the lines not containing the provided regular-expression. ch re on grep is on [chapter 4](#chapter-4-filters).
 	* `sort` sorts a file line by line alphabetically. There are many options to make sort more useful.
-	* `tail` in its defaul form it prints the last lines of a file, but the number of the last lines can be specified as in `tail -4`.
+	* `cmp file1 file2`: Used to check if two files are the same. Works on any type of file. It only shows in which line the first difference occurs.
+	* `diff file1 file2`: used ti tell the differences between text files and where they occur. 
+
+### 1.3 Directories:
+- When you login, you are in your **home directory**. The **working directory** or **current directory** is the one where you are working now.
+- When a file is created, it by default resides in the current directory.
+- `pwd` tells you where you are located in the file system tree.
+- A *pathname* is the full name of a file starting at the root, something like `/usr/you/junk`.
+- When you try to run a command, the system looks inside the current directory and if it doesn't find it, it searches `/bin`, and if not then `/usr/bin`.
+If you run `ls /bin /usr/bin`, you get a list of commands like `mv`, `cp`, `ed` .. etc. 
+- `mkdir` is used to create a new directory and `rmdir` removes an empty directory.
+- `cd` is used to changree directories. By itself it takes you to home directory. `cd ..` takes you one level back up towards the root. `cd /usr` takes you down to the user directory.
+
+### 1.4 The shell:
 
 
 
