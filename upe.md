@@ -151,6 +151,18 @@ If you run `ls /bin /usr/bin`, you get a list of commands like `mv`, `cp`, `ed` 
 - The format or type of a file is determined by the program that interprets it. The file system and kernel have no idea what the type is, but it can make an educated guess through the command `file <filename>`.
 - To determine the type of a file `file` reads the first few hundred bytes of the file to tell its type. Reading the extension of the file only is not reliable. Some files have system-dependent magic numbrs that determine their types. In binary files, it is octal 410. In C files, file command looks for something like "#include" to determine it's a C file. Reducing and eliminating differences between file types is an advantage for the unix system. This makes the commands more versatile and everything in unix is a file. A binary, a c file, a text file..etc., they can all be treated in the same way. It's up to specific programs to deal with distinct types of files.
 
+### 2.3 Filenames and directories:
+- Each running program, _process_, has a working directory. The process doesn't need to specify any pathname when it's interacting with the files residing in its working directory.
+- `mkdir`: creates a new directory.
+- `du`: prints a lit of directories and subdirectories. With the option `-a`, this command can print all directories and files as in `du -a`, and the output of this program can also be grepped in a pipe to look for a certain pattern as in `du -a | grep batata`. If you don't specify a certain directory, this command assumes you mean the current directory. 
+- In pure unix directories are files. An octal dump of a directory reveals a mix of binary and textual data. The textual data have the names of files inside the directory and the directory's name. I tried this on mac OS but couldn't `od` a directory. 
+
+### 2.4 Permissions:
+- Different users have different permissions. The super-user has more permissions. The system recognize users by u-id's or user ids. Two different login ids can have the same u-id. Users are also classed into groups. The system determines what you are allowed to do based on your uid or group-id.
+- The `etc/passwd` is the password file. It contains all the login information about each user of the system. (Tried this on mac but it didn't work exactly as described here but there is an etc/passwd and it has login information, but I couldn't see user id there). Each line in the password file follows the following format:
+	`login-id:encrypted-password:uid:group-id:miscellany:login-directory:shell`
+The shell field is often empty because you're using the default shell `/bin/sh`. Miscellany contains anything, usually name, email or phone.  
+
 
 
 
