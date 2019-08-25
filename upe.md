@@ -1,20 +1,20 @@
 # THE UNIX PROGRAMMING ENVIRONMENT
 
-- this is an old book but it's held in high esteem by many. Seeing how many linux commands resemble those of unix and having enjoyed the C book, co-written by Kernighan, I thought I'd skim over this one and see what it still has to offer.
+- This is an old book but it's held in high esteem by many. Seeing how many linux commands resemble those of unix and having enjoyed the C book, co-written by Kernighan, I thought I'd skim over this one and see what it still has to offer.
 - These are my notes on what I understand of the book and what I manage to read of it.
 - I will use macOS 10.x to test the scripts provided in the book and probably report if they are still relevant.
 - I might skip the few commands and things I already know about how to use the terminal.
 
 - [Preface/Trivia](#preface/trivia)
 - [Chapter 1: Unix for Beginners](#chapter-1-unix-for-beginners)
-- [Chapter 2: ]()
-- [Chapter 3: ]()
-- [Chapter 4: Filters](#filters)
-- [Chapter 5: ]()
-- [Chapter 6: ]()
-- [Chapter 7: ]()
-- [Chapter 8: ]()
-- [Chapter 9: ]()
+- [Chapter 2: The File System](#chapter-2-the-file-system)
+- [Chapter 3: ](#chapter-3-)
+- [Chapter 4: Filters](#chapter-4-filters)
+- [Chapter 5: ](#chapter-5-)
+- [Chapter 6: ](#chapter-6-)
+- [Chapter 7: ](#chapter-7-)
+- [Chapter 8: ](#chapter-8-)
+- [Chapter 9: ](#chapter-9-)
 
 ## PREFACE/TRIVIA:
 - Unix was created in 1969 in Bell Labs and rewritten in C in 1973. In 1974, it was licensed to universities (the so called BSD).
@@ -97,7 +97,7 @@ If you run `ls /bin /usr/bin`, you get a list of commands like `mv`, `cp`, `ed` 
 		1. [01234546789]
 		2. [1-46-9]
 		3. [a-z]
-	* `?` similar to `*` but it matches any single character instead of a sequence of characters.
+	* `?` is similar to `*` but it matches any single character instead of a sequence of characters.
 - **IMPORTANT:** Patterns only match existing filenames, so the following expression doesn't work:
 `mv ch.* chapter.*`
 - `*` is also very useful in path names. Think of the possibilities and what you can do with something like `usr/*/calendar` or `usr/*` etc.
@@ -118,9 +118,38 @@ If you run `ls /bin /usr/bin`, you get a list of commands like `mv`, `cp`, `ed` 
 - `nice <command> &` keeps running without taking too much resources.
 - A job can also be **scheduled** through the use of `at`. For example `at 4pm echo ahmed`. I am having a hard time running this command, because of time formatting. I keep getting the message "garbled time". I'll come back to it when I have an Internet connection.
 - **Environment Tailoring:** Unix can be customized to meet one's needs. The command `ssty` changes the kill line functionality from `ctl-u` to `@` through the following command `stty kill @`. Once you logout or turn off the terminal, this change disappears, but to make it persist, you can use the .profile or bash_profile file. This can be discussed somewhere else. Some commands can be added to the profile, so that every time you login, some information is printed first like how busy the system is ..etc.
-- 
+- **Shell variables**: are shell properties that can be controlled and set by the user. They include
+	* **PS1**: or prompt string and it can be set to anything. It usually has the user name and `$`. This can be icluded in .profile or .bash_profile as in `PS1="Yeas dear?"`.
+	* **PATH:** This is the most useful shell variable. It sets where the shell should look for commands. By default, the sell looks for commands in the current directory, then in bin, then in /usr/bin. This sequence of directories is called the *search path* which is stored in the shell variable PATH. PATH has a strange syntax where directories are separated by colons. This an example of a path that includes the current directory, /bin, /usr/bin and /usr/bin/games:
+		`PATH = .:/bin:/usr/bin:/usr/bin/games`
+	- There is also the strange {$PATH}, which I don't understand. More search paths can be added to the first one in this manner `PATH=$PATH:/usr/news`. This new search path is added to the value of PATH which is denoted here by $PATH. The value of any shell variable is obtained by preceding it with `$`.
+	-  `.` means the current directory, and a null value of PATH also means current directory.
+	- You can create your own commands, collect them in a certain directory and add their search path to your PATH.
+	* **HOME**: denotes the home directory.
+	* **TERM**: is used by editors to manage screen and tells the editor what type of terminal you have.
+- You can have your own variables to store different information such as a certain path,
+ so `g=/usr/bin/games` allows you to do something like `cd g`. `g` here stores the path to said directory.
+- `export` tells the shell that other programs can use sell or personl variables. This can be done in two ways:
+	1. `PATH = .:/bin:/usr/bin:/usr/bin/games`: where the variable PATH is also defined and then exported.
+	2. `export PATH`: where the previously defined variable is exported.
+- You can create your own commands by packaging existing commands. This can create some very powerful tools.
 
+### 1.5 The rest of the unix system:
+- There is much more functionality in the unix system that's explained exhaustively in the manual. I need to learn more about how to use the manual. 
 
+## CHAPTER 2: THE FILE SYSTEM
+
+- Everything in the Unix system is a file. To succeed using unix commands, one need to get familiar with its file system and how files are manipulated, structured..etc. 
+
+### 2.1 The basics of files:
+- Files are just byte sequences. The meaning of those bytes depends solely on the programs that interpret them. The system doesn't care what they mean or what structure they have.
+- The `od -cb <filenames>` commands print the bytes of a file as characters and their octal values. od stands for *octal dump*. This commands prints the byte content of a file, but doesn't print the end of the file. The kernel keeps track of the length of the file, so the end of the file is signaled by the fact that there is no more bytes to print out.
+- Programs retrieve the data in a file through a **system call** (OS voodoo) called ***read***. Each time **read** is called it returns the next part of the file and also returns the number of bytes it reads. When, there are no more bytes, it returns zero, signaling the end of the file. Returning zero is interpretation-independent and a good way of telling the end of file without returning a special character. 
+- _More voodoo. I don't see the point of cat and cat -u_
+
+### 2.2 What is in a file? 
+- The format or type of a file is determined by the program that interprets it. The file system and kernel have no idea what the type is, but it can make an educated guess through the command `file <filename>`.
+- To determine the type of a file `file` reads the first few hundred bytes of the file to tell its type. Reading the extension of the file only is not reliable. Some files have system-dependent magic numbrs that determine their types. In binary files, it is octal 410. In C files, file command looks for something like "#include" to determine it's a C file. Reducing and eliminating differences between file types is an advantage for the unix system. This makes the commands more versatile and everything in unix is a file. A binary, a c file, a text file..etc., they can all be treated in the same way. It's up to specific programs to deal with distinct types of files.
 
 
 
