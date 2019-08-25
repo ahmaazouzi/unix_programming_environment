@@ -87,6 +87,49 @@ If you run `ls /bin /usr/bin`, you get a list of commands like `mv`, `cp`, `ed` 
 - `cd` is used to changree directories. By itself it takes you to home directory. `cd ..` takes you one level back up towards the root. `cd /usr` takes you down to the user directory.
 
 ### 1.4 The shell:
+- Between you and the kernel sits a program called the **shell** or command interpreter. The existance of such a program separating you from the kernel has some advantages including:
+	* Filename shorthands: batches of files can be processed all at once using certain patterns.
+	* Input-output redirection: You can send your output to a file or gran input from a file or directly make the output an input to another program
+	* Customizing the environment: you can create your own tools.
+- **Filename shorthands**: These are the basic shorthands found in SQL, regular expressions .. etc. `*` means any string of characters can be used for example to grab all files that start with 'ch' as in `ch*`, or all the files that end with '.pdf' as in `*pdf`. It's the shell that interprets `*` as a string of any length in the example `ls *.pdf` and not `ls`. 
+- Other important filename shorthands include:
+	* `[...]`: matches a single one of any of the characters inside the bracket and this can be done in one of the following notations:
+		1. [01234546789]
+		2. [1-46-9]
+		3. [a-z]
+	* `?` similar to `*` but it matches any single character instead of a sequence of characters.
+- **IMPORTANT:** Patterns only match existing filenames, so the following expression doesn't work:
+`mv ch.* chapter.*`
+- `*` is also very useful in path names. Think of the possibilities and what you can do with something like `usr/*/calendar` or `usr/*` etc.
+- To neutralize the special functionality of `?` and `*` precede them with backslashes as in `\*` and `\?`. Now * and ? are just regular characters.
+- **Input-output redirection:** The terminal doesn't have to always be the input, output or both of a command. The results of a command such as `cat` can be output into a file. Here are some examples of conventions for redirecting input-output that are part of the shell:
+	* `cat f1 f2 f3 > temp.txt`: Instead of catting the contents to the terminal, they are catted to the file temp.txt. `>` means put the output of the command into temp.txt. If the file exists, it overwrites it and if not it creates a new file with the name provided.
+	* `cat f1 f2 f3 >> temp.txt`: Instead of overwriting the content of temp.txt, it adds the content to the end of it. 
+	* `mail a b c < letter.txt`: `<` means input the contents of letter.txt into a, b and c.
+- The use of temp files allows you to do many nifty things.
+- **Pipes:** or pipelines connect the output of a program to the input of another program without the need for temporary files. This is a fundamental contribution of the unix system. `who | sort`, for example, prints a sorted list of logged in users and `ls | sort -r` lists a revers-sorted list of files, and `ls | grep .pdf` lists file whose names include the pattern '.pdf'.
+- Pipes are versatile and anything that can be input into, or output that can be output from the terminal can be done to a pipe. You can chain  as many programs in a pipe as you wish. Programs run simultaneously in a pipe, so they allow for interactivity. 
+- I feel like a pipe including commands with optional filenames and arguments might cause confusion. Anyways, creating efficient pipes might need some training and getting used to.
+- **Processes:** You can string two programs together using a semicolon. `date; who` prints the date and list logged users. These programs run in sequence. Using `&`, the user can go ahead and start another program while the first program is still running. So by using `wc upe.md &`, you can start another program even thiugh wc is still running. When you use `&`, a number is printed to the screen. That number is **process-id** of the running process. A process is different from a program; it's an instance of a program. Two instances of the same program are two different processes. With an `&` at the end of a pipe, only the id of the last process is printed out. The command `wait` waits until all the process started with `&`.
+- The process-id can be used ot kill the process with the command `kill <process-id>`.
+- `ps` is used to list all the running processes. PID is the process-id. TTY is the terminal associated with the process and TIME is how much time the process used.
+- Processes might have parents and children (I won't go into this headache here).
+- **nohup**: `nohup <command> &` allows you to keep running a program after you log out of the terminal.
+- `nice <command> &` keeps running without taking too much resources.
+- A job can also be **scheduled** through the use of `at`. For example `at 4pm echo ahmed`. I am having a hard time running this command, because of time formatting. I keep getting the message "garbled time". I'll come back to it when I have an Internet connection.
+- **Environment Tailoring:** Unix can be customized to meet one's needs. The command `ssty` changes the kill line functionality from `ctl-u` to `@` through the following command `stty kill @`. Once you logout or turn off the terminal, this change disappears, but to make it persist, you can use the .profile or bash_profile file. This can be discussed somewhere else. Some commands can be added to the profile, so that every time you login, some information is printed first like how busy the system is ..etc.
+- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
