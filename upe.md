@@ -210,7 +210,25 @@ The shell field is often empty because you're using the default shell `/bin/sh`.
 `crw--w---- 1 ahmed tty 16, 0 Aug 26 00:30 ttys000`
 This information is derived from the inode of the device file. It contains its internal name which consists of its type, either `c` (character) or `b` (block) and a pair of characters, its _major_ and device numbers. The type is in the beginning of the permissions block produced by ls `crw--w----`.  Discs and tapes were block devices, while terminals and others were character devices. The major device encodes the device type, while the minor number registers its instance. In our example 16 is the major number while 0 is the minor one
 - `tty` commands tells you which terminal you are using.
-- Many other incomprehensible details about booting, mounting, dismounting.. etc.  
+- Many other incomprehensible details about booting, mounting, dismounting.. etc. 
+
+## CHAPTER 3: USING THE SHELL
+- The shell is the program that interprets the requests you make to the system. A lot can be accomplished with the shell alone.
+
+### 3.1 Command line structure:
+### 3.2 Metacharacters:
+### 3.3 Creating new commands:
+### 3.4 Command arguments and parameters:
+### 3.5 Program output as arguments:
+### 3.6 Shell variables:
+### 3.7 More on I/O redirection:
+### 3.8  Looping in shell programs:
+### 3.9 _Bundle_: Putting it all together:
+### 3.10 Why a programmable shell:
+
+## CHAPTER 4: FILTERS
+
+## CHAPTER 5: SHELL PROGRAMMING 
 
 
 
