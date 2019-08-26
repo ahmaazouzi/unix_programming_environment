@@ -154,7 +154,7 @@ If you run `ls /bin /usr/bin`, you get a list of commands like `mv`, `cp`, `ed` 
 ### 2.3 Filenames and directories:
 - Each running program, _process_, has a working directory. The process doesn't need to specify any pathname when it's interacting with the files residing in its working directory.
 - `mkdir`: creates a new directory.
-- `du`: prints a lit of directories and subdirectories. With the option `-a`, this command can print all directories and files as in `du -a`, and the output of this program can also be grepped in a pipe to look for a certain pattern as in `du -a | grep batata`. If you don't specify a certain directory, this command assumes you mean the current directory. 
+- `du`: prints a list of directories and subdirectories. With the option `-a`, this command can print all directories and files as in `du -a`, and the output of this program can also be grepped in a pipe to look for a certain pattern as in `du -a | grep batata`. If you don't specify a certain directory, this command assumes you mean the current directory. 
 - In pure unix directories are files. An octal dump of a directory reveals a mix of binary and textual data. The textual data have the names of files inside the directory and the directory's name. I tried this on mac OS but couldn't `od` a directory. 
 
 ### 2.4 Permissions:
@@ -216,7 +216,73 @@ This information is derived from the inode of the device file. It contains its i
 - The shell is the program that interprets the requests you make to the system. A lot can be accomplished with the shell alone.
 
 ### 3.1 Command line structure:
+- The simplest command is made of one word such as `ls`, `who` or `date`. A command is usually terminated with new line, but it can also be terminated with a semicolon, so multiple commands can be present in the same line as in `date; ls; who`.
+- Because of operator precedence rules, a semicolon may introduce some issues especially in pipes. In `date; who | wc` you might want to get the word count of the output of both who and date, but you only get those of date. `|` has a higher precedence than `;`. To solve this problem, group who and date with parentheses as in `(date; who) | wc`. This gives the word count of both date and who. Now, the outputs of the two commands "are concatenated into a single stream that can be sent down a pipe."
+- `tee` saves the a pipe's data into a file and its output as in `(date; ls) | tee save.txt | wc`. In this example, tee dumps data in save.txt and wc receives that same data. (_I don't know what's the point of this_).
+- `&` is another important command terminator. `long-running-command &` tells the shell to not wait for the command to end. It can keep running in the background while the user can keep using other commands of the shell. This terminator can be used with such commands as `sleep` ot do interesting things. `sleep` is a command that waits a specified time in seconds before it exists. It can be used to create reminders (_asynchronous stuff??!!!_). The following example should be self-explanatory: `(sleep 5; echo tea is ready) & echo tea will be ready in 5 seconds`. The precedence of `&` is higher than that of a semicolon, so the parentheses are essential in this example.
+- Since pipes are commands, `&` also applies to pipes.
+- **Command arguments:** commands can take arguments which are words separated by spaces or tabs. These arguments are usually files. Commands also take options which are arguments starting with minus signs such as `-c`.
+- **Special characters** such as `>`, `<`, `|` ,`&`, `;` are not arguments but are used to control how the shell run commands.
+
 ### 3.2 Metacharacters:
+- These are special characters that are interpreted differently by the shell. The asterix `*` is the most commonly used metcharacter. It is used to search a directory and stands for any string of characters. Filename-matching characters, though, ignore files starting with dots, to avoid problems with `.` (current directory) and `..` (parent directory).
+- There are many metacharacters. To prevent the shell from interpreting these characters as metacharacters, enclose them in single quotes (`$ echo '****'` instead of `$ echo ****`) or precede them with backslashes (`$ echo \*\*\*\*` instead of `$ echo ****`). Single quotes are less problematic than double quotes and the user needs the keep the distinction between the two. Backslashes are still the easiest way to avoid all confusion. 
+- Another vital use of single quotes is that they allow for including newline in the printed text.
+```
+$ echo 'hello
+> world'
+```
+will include a new line after hello.
+- **Secondary prompt** appears when you type newline inside quotes or double quotes. It is printed by the shell in a new line when it expects you to type more to complete a command. It is stored in the shell variable PS2 and can be changed and stored in .profile through this command:
+```
+PS2=">>>"
+```
+- A backslash at the end of a line allows you to continue typing on the next line. The backslash is discarded in general but is retained inside single quotes:
+```
+$ echo abc\
+> ddd\
+> zz
+abcdddzz
+```
+while:
+```
+$ echo 'abc\
+> ddd\
+> zz'
+abc\
+ddd\
+zz
+```
+- `#` is used for comments.
+- Some super nerdy talk of why `echo` and why not the newline supplemented by echo is a good idea!! 
+- **Shell metacharacters:**
+
+| Character | Description
+| --- | --- |
+| `>` | *prog > file* direct standard output to *file*
+| `>>` | *prog >> file* append standard output to *file*
+| `<` | *prog < file* take standard input from file *file*
+| `|` | *p1 | p2* connect standard output of *p1* to standard input of *p2*
+| `<< str` | *here document*: standard input follows, up to next *str* on a line by itself
+| `*` | match any string of zero or more characters in filenames
+| `?` | match any single character in filenames.
+| `[ccc]` | match any single character from *ccc* in filenames.
+| `;` | command terminator: `p1;p2` does `p1`, then `p2`
+| `&` | like `;` but doesn't wait for `p1` to finish
+| ``...`` | run command(s) in ...; output replaces \`...\`
+| `(...)` | run command(s) in ... in a subshell
+| `{...}` |run commands(s) in ... in current shell(rarely used)
+| `&1, $2, etc.` | $0...$9 replaced by arguments to shell file
+| `$var` | value of shell variable `var`
+| `${var}` | value of `var`; avoids confusion when concatonated with text;
+| `\` | *\c* take character *c* literally, newline discarded
+| `'...'` | take ... literally
+| `"..."` |  take ... literally after `$`, ``...`` and `\` interpreted
+| `#` | if `#` starts word, rest of line is comment
+| `var=value` | assign to variable `var`
+| `p1 && p2` | run `p1`, if unsuccessful, run `p2`
+| `p1 || p2` | run `p1`, if unsuccessful, run `p2`
+
 ### 3.3 Creating new commands:
 ### 3.4 Command arguments and parameters:
 ### 3.5 Program output as arguments:
