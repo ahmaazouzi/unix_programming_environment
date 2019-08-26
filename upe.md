@@ -284,7 +284,29 @@ zz
 | `p1 || p2` | run `p1`, if unsuccessful, run `p2`
 
 ### 3.3 Creating new commands:
+- When a sequence of commands are run frequently, it would be a good idea to package them in a new command.
+- The book provides an example of a program that counts how many users are logged in the system. The following pipe does that job:
+```
+who | wc -l
+```
+This pipe is written into a file *nu*using an editor or simply echoed into that file:
+```
+echo 'who | wc -l' > nu
+```
+The shell, named `sh` in unix, is then used to to run the program. It takes its input from the file *nu* as in:
+```
+sh <nu
+```
+It's ridiculous to type `sh` every time you want to run this type of file. This file needs to be turned into a *shell file.* Generally speaking, if a file is executable and contains text, the shell assumes it is a shell file. Change permissions of the file to make it executable:
+```
+chmod +x nu
+```
+Now nu is a shell command that can be run just by typing `nu`.
+- The way the shell runs `nu` is to create a new shell process as if `sh nu` were typed. This shell process is called a *sub shell* (a shell process invoked by the current shell).
+- The new command is only available in your current directory. To make it available to your system or your repertoire, put it in a specific directory and add it to your PATHin your `.profile` or `.bash_profile`. There are different conventions for this. The book suggests a certain `usr/you/bin`
+
 ### 3.4 Command arguments and parameters:
+
 ### 3.5 Program output as arguments:
 ### 3.6 Shell variables:
 ### 3.7 More on I/O redirection:
