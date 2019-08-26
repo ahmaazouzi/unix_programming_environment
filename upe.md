@@ -185,12 +185,36 @@ The shell field is often empty because you're using the default shell `/bin/sh`.
 - `od` doesn't seem to work on macOS, but according to the book, 'od' on a directory prints a mix of binary and textual data where the text refers to file names and the binary refer to the i-numbers which are the only links between file names and their contents. A filename in a directory is called a *link* because it links a name a to an inode, and hence the data. The same i-number can appear in different directories. `rm` only removes the link to an inode. Only when the last link to a file is removed that the system removes the inode, and hence the file itself.
 - When the i-number is zero, that means the contents of the file is still there and there might be another link to it.
 - The `ln` command makes a link to an existing file with the syntax `ln <old-file> <new-file>`. This gives the same file two different names, allowing the same file to appear in two different directories. This seems like it creates a new file but all it does is creating a new name that points to the same file. Both names have the same i-number, which is COOOL!!! 
-- The numnber that `ls -l` prints between the permissions and the owner of the file is the number of links to the file.
+- The number that `ls -l` prints between the permissions and the owner of the file is the number of links to the file.
 - All links to an inodes are equally important. If a change is made to a file through a link, the same change will appear in all other links since all links just point to the same inode or file. The file again is not removed until the last link to it is removed. 
 - It's easy to lose files and unless the system is properly backed up, be careful when messing with links.
 - While `ln` only creates a new link or pointer to the same old content, `cp` creates a new copy of the old file content.
 - `mv` is a little similar to cp and ln. While cp creates new centent and while ln creates a new link to the same inode, mv keeps the content and the i-number, but only change the name of the file.
 - ln, cp, mv can shuffle across directories, not just in the same directory. as in `mv /usr/junk.txt tuts/l_unix/unix_programming_env/`.
+
+### 2.6 The directory hierarchy:
+- Being familiar with the directory hierarchy of a system makes using it easier and more efficient. This structure might have changed. it's fairly different on the mac OS system, but I'll stick here to the original hierarchy.
+- The top directory or the root is `/` and under it are the following directories:
+	* `bin`: binaries such as who, ed, ls.
+	* `boot`: bootstrap. Program that starts before the unix system is loaded.
+	* `dev`: devices.
+	* `etc`: et cetera or miscellany such as administrative files like passwd and groups.
+	* `lib`: library. Parts of the C compiler.
+	* `tmp`: temporary files. When programs are running, they create their own files or copy files they work on inside tmp. tmp is automatically cleaned when the system starts.
+	* `unix`: The unix program, kernel..etc.
+	* `usr`: user file system.
+- This is very similar to linux and it's better to invest time getting familiar with that directory hierarchy.
+
+### 2.7 Devices:
+- Unix is or was special in that peripherals were run using files. There are references to these files inside the kernel that are converted to hardware commands that access these peripherals. Here is an example of what `ls -l /dev` would produce:
+`crw--w---- 1 ahmed tty 16, 0 Aug 26 00:30 ttys000`
+This information is derived from the inode of the device file. It contains its internal name which consists of its type, either `c` (character) or `b` (block) and a pair of characters, its _major_ and device numbers. The type is in the beginning of the permissions block produced by ls `crw--w----`.  Discs and tapes were block devices, while terminals and others were character devices. The major device encodes the device type, while the minor number registers its instance. In our example 16 is the major number while 0 is the minor one
+- `tty` commands tells you which terminal you are using.
+- Many other incomprehensible details about booting, mounting, dismounting.. etc.  
+
+
+
+
 
 
 
