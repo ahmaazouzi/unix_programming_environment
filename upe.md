@@ -161,7 +161,36 @@ If you run `ls /bin /usr/bin`, you get a list of commands like `mv`, `cp`, `ed` 
 - Different users have different permissions. The super-user has more permissions. The system recognize users by u-id's or user ids. Two different login ids can have the same u-id. Users are also classed into groups. The system determines what you are allowed to do based on your uid or group-id.
 - The `etc/passwd` is the password file. It contains all the login information about each user of the system. (Tried this on mac but it didn't work exactly as described here but there is an etc/passwd and it has login information, but I couldn't see user id there). Each line in the password file follows the following format:
 	`login-id:encrypted-password:uid:group-id:miscellany:login-directory:shell`
-The shell field is often empty because you're using the default shell `/bin/sh`. Miscellany contains anything, usually name, email or phone.  
+The shell field is often empty because you're using the default shell `/bin/sh`. Miscellany contains anything, usually name, email or phone. The second field has a an encrypted form of the password. Login encrypts the password you provide and compares it to this encrypted form and if they agree, you are allowed in (Encryption and security are vast topics beyond the scope of this book and notes).
+- There are three kinds of permissions: read, write and execute. Each file has diffrent sets of permissions. As the owner of a file, you have a set of execute, write, read permissions. The group you belong to has its own set and everybody else has a different set. Listing files with the long option `ls -l` let you know what permissions a file has which are show in the first column of the list in the following form `-rw-r--r--` . The first letter in this string stands for whether the file is a directory or not. If it were, the file would look this way `drw-r--r--`. The next 3 characters `rw-`encode the permissions associated with the owner of the file. It can both write and read the file, but the file is not an executable, hence the last character is slash; it would be an `x` if it were an executable and the owner (has the permission to execute it!) The next 3 characters are the set of permissions of the group you belong too and the last 3 are for everybody else.
+- The file `etc/group` encode group names, group ids and which users belong to which groups.
+- _There is talk of `set-uid`, which I really don't understand. I will leave that_ to a course or a book on linux.
+- `x` in a directory doesn't mean it's executable, but it means it can be searched. It's possible to give a user the permission set `--x`. This means the file can be accessed if the user knows its name, but can't run ls on it to see what other files reside in it. Conversely, `r--` means that one can run ls and see what files are in it, but can't use them.
+- The **chmod** command changes permissions on a file. This can be done in two ways:
+	* Octal numbers: This is done by adding a 4 for read, 2 for write and 1 for execute. E.g to change permission of a file to `-rw-rw-rw-`, we use `chmod 666 <filename>`.
+	* Symbolic description: This is complicated, but `chmod +w` this would remove writing permissions from all users and `chmod -w` remove writing permissions from all. How to do it individually for the 3 sets of users, who knows??!!!
+- Only super-users and the owner of a file can change its permissions. Even if somebody else allows you to write a file, the system won't allow you to change its permissions.
+- If a directory is writable, users can remove files from it regardless of what these permissions these files have. To prevent certain users from deleting files from a directory, make the directory non-writable.
+- Permissions and dates are not stored in files, but in a system structure called **i-nodes**.
+
+### 2.5 Inodes:
+- "A file has several components such as name, contents, and administrative information such as permissions and modification times. **Inodes** contain administrative information about the files as well as system information such as how long the file is and where it resides in disc.. etc.
+- Inode has 3 times:
+	* When contents were last modified.
+	* When the file was last used (read or executed).
+	* When the inode itself was last changed, such as when permission were set.
+- These different times can be examined through different options of the `ls` command such as `-c` (_use time when file status was last changed_) and `-u` (_use time of last access, instead of last modification of the file_) along with the long format option `-l`. (Check the manual for ls options).
+- Inodes are extremely important for the file system, because they are actually the files. Directory hierarchies are just a naming convenience. The system recognize files by their i-numbers, the numbers of the inodes that hold the files information.
+`ls -i` reports the i-number of a file.
+- `od` doesn't seem to work on macOS, but according to the book, 'od' on a directory prints a mix of binary and textual data where the text refers to file names and the binary refer to the i-numbers which are the only links between file names and their contents. A filename in a directory is called a *link* because it links a name a to an inode, and hence the data. The same i-number can appear in different directories. `rm` only removes the link to an inode. Only when the last link to a file is removed that the system removes the inode, and hence the file itself.
+- When the i-number is zero, that means the contents of the file is still there and there might be another link to it.
+- The `ln` command makes a link to an existing file with the syntax `ln <old-file> <new-file>`. This gives the same file two different names, allowing the same file to appear in two different directories. This seems like it creates a new file but all it does is creating a new name that points to the same file. Both names have the same i-number, which is COOOL!!! 
+- The numnber that `ls -l` prints between the permissions and the owner of the file is the number of links to the file.
+- All links to an inodes are equally important. If a change is made to a file through a link, the same change will appear in all other links since all links just point to the same inode or file. The file again is not removed until the last link to it is removed. 
+- It's easy to lose files and unless the system is properly backed up, be careful when messing with links.
+- While `ln` only creates a new link or pointer to the same old content, `cp` creates a new copy of the old file content.
+- `mv` is a little similar to cp and ln. While cp creates new centent and while ln creates a new link to the same inode, mv keeps the content and the i-number, but only change the name of the file.
+- ln, cp, mv can shuffle across directories, not just in the same directory. as in `mv /usr/junk.txt tuts/l_unix/unix_programming_env/`.
 
 
 
