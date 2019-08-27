@@ -303,9 +303,18 @@ chmod +x nu
 ```
 Now nu is a shell command that can be run just by typing `nu`.
 - The way the shell runs `nu` is to create a new shell process as if `sh nu` were typed. This shell process is called a *sub shell* (a shell process invoked by the current shell).
-- The new command is only available in your current directory. To make it available to your system or your repertoire, put it in a specific directory and add it to your PATHin your `.profile` or `.bash_profile`. There are different conventions for this. The book suggests a certain `usr/you/bin`
+- The new command is only available in your current directory. To make it available to your system or your repertoire, put it in a specific directory and add it to your PATHin your `.profile` or `.bash_profile`. There are different conventions for this. The book suggests a certain `usr/you/bin`.
 
 ### 3.4 Command arguments and parameters:
+- How do we supply our new command with arguments such as files to work on? The book provides the example of a command `cx` that make files executable. Arguments are denoted by a sequence of symbols $1 to $9 where $1 stands for the first argument, $2 stands for the second argument and so on until $9. If our shell file contains the following command `chmod +x $1`, then  the command will work on the first argument, and the sub-shell replaces `$1` with `nu` in the command `cx nu`.
+-  How to handle **more than one argument?** You can do the naive `chmod +x $1 $2 $3 $4 $5 $6 $7 $8 $9`. This will work if you have less than 9 files. The unused arguments will be empty strings. If you have more than 9 arguments, the program fails. This can be solved by the the following nifty convention: 
+```
+chmod +x $*
+```
+This way, your command will work no matter how many arguments you have.
+- Files are not the only type of arguments you can add to your commands. Consider the example provided by the book:
+```
+```
 
 ### 3.5 Program output as arguments:
 ### 3.6 Shell variables:
