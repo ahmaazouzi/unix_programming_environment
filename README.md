@@ -311,8 +311,13 @@ chmod +x $*
 This way, your command will work no matter how many arguments you have.
 - Files are not the only type of arguments you can add to your commands. Consider the example provided by the book where `grep` is used to grap text from files:
 ```
-echo 'grep ' > search_phones
+echo 'grep $* usr/lib/phone_book' > search_phones
 ```
+This command returns all lines containing the grepped pattern. There is only one little problem. When the grepped pattern is made of more than one word, it becomes more than one argument. Our command gets two arguments instead of one resulting in the failure of the program. To fix this problem, `$*` needs to be placed inside double quotes. While single quotes doesn't allow any character to be interpreted by the shell, double quotes allow `$`, `\`, and `...` to be interpreted instead of just read as regular characters. The correct command then becomes:
+```
+echo 'grep "$*" usr/lib/phone_book' > search_phones
+```
+Now, the strings that replaces `"$*"` will be a single argument even if it contains a blank.
 
 ### 3.5 Program output as arguments:
 ### 3.6 Shell variables:
