@@ -1,9 +1,6 @@
 # THE UNIX PROGRAMMING ENVIRONMENT
 
-- This is an old book but it's held in high esteem by many. Seeing how many linux commands resemble those of unix and having enjoyed the C book, co-written by Kernighan, I thought I'd skim over this one and see what it still has to offer.
-- These are my notes on what I understand of the book and what I manage to read of it.
-- I will use macOS 10.x to test the scripts provided in the book and probably report if they are still relevant.
-- I might skip the few commands and things I already know about how to use the terminal.
+This is an old book but it's held in high esteem by many. Seeing how many linux commands resemble those of unix and having enjoyed the C book, co-written by Kernighan, I thought I'd skim over this one and see what it still has to offer. These are my notes on what I understand of the book and what I manage to read of it. I will use macOS 10.x to test the scripts provided in the book and probably report if they are still relevant. I might skip the few commands and things I already know about how to use the terminal.
 
 - [Preface/Trivia](#preface/trivia)
 - [Chapter 1: Unix for Beginners](#chapter-1-unix-for-beginners)
@@ -312,8 +309,9 @@ Now nu is a shell command that can be run just by typing `nu`.
 chmod +x $*
 ```
 This way, your command will work no matter how many arguments you have.
-- Files are not the only type of arguments you can add to your commands. Consider the example provided by the book:
+- Files are not the only type of arguments you can add to your commands. Consider the example provided by the book where `grep` is used to grap text from files:
 ```
+echo 'grep ' > search_phones
 ```
 
 ### 3.5 Program output as arguments:
