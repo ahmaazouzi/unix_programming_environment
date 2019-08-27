@@ -274,7 +274,7 @@ zz
 | `${var}` | value of `var`; avoids confusion when concatonated with text;
 | `\` | *\c* take character *c* literally, newline discarded
 | `'...'` | take ... literally
-| `"..."` |  take ... literally after `$`, ``...`` and `\` interpreted
+| `"..."` |  take ... literally after `$`, `\`...\`` and `\` interpreted
 | `#` | if `#` starts word, rest of line is comment
 | `var=value` | assign to variable `var`
 | `p1 && p2` | run `p1`, if unsuccessful, run `p2`
