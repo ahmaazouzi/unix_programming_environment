@@ -225,24 +225,24 @@ This information is derived from the inode of the device file. It contains its i
 - These are special characters that are interpreted differently by the shell. The asterix `*` is the most commonly used metcharacter. It is used to search a directory and stands for any string of characters. Filename-matching characters, though, ignore files starting with dots, to avoid problems with `.` (current directory) and `..` (parent directory).
 - There are many metacharacters. To prevent the shell from interpreting these characters as metacharacters, enclose them in single quotes (`$ echo '****'` instead of `$ echo ****`) or precede them with backslashes (`$ echo \*\*\*\*` instead of `$ echo ****`). Single quotes are less problematic than double quotes and the user needs the keep the distinction between the two. Backslashes are still the easiest way to avoid all confusion. 
 - Another vital use of single quotes is that they allow for including newline in the printed text.
-```
+```sh
 $ echo 'hello
 > world'
 ```
 will include a new line after hello.
 - **Secondary prompt** appears when you type newline inside quotes or double quotes. It is printed by the shell in a new line when it expects you to type more to complete a command. It is stored in the shell variable PS2 and can be changed and stored in .profile through this command:
-```
+```sh
 PS2=">>>"
 ```
 - A backslash at the end of a line allows you to continue typing on the next line. The backslash is discarded in general but is retained inside single quotes:
-```
+```sh
 $ echo abc\
 > ddd\
 > zz
 abcdddzz
 ```
 while:
-```
+```sh
 $ echo 'abc\
 > ddd\
 > zz'
@@ -274,7 +274,7 @@ zz
 | `${var}` | value of `var`; avoids confusion when concatonated with text;
 | `\` | *\c* take character *c* literally, newline discarded
 | `'...'` | take ... literally
-| `"..."` |  take ... literally after `$`, `\`...\`` and `\` interpreted
+| `"..."` |  take ... literally after `$`,`` `...` `` and `\` interpreted
 | `#` | if `#` starts word, rest of line is comment
 | `var=value` | assign to variable `var`
 | `p1 && p2` | run `p1`, if unsuccessful, run `p2`
@@ -283,26 +283,26 @@ zz
 ### 3.3 Creating new commands:
 - When a sequence of commands are run frequently, it would be a good idea to package them in a new command.
 - The book provides an example of a program that counts how many users are logged in the system. The following pipe does that job:
-```
+```sh
 who | wc -l
 ```
 This pipe is written into a file *nu*using an editor or simply echoed into that file:
-```
+```sh
 echo 'who | wc -l' > nu
 ```
 The shell, named `sh` in unix, is then used to to run the program. It takes its input from the file *nu* as in:
-```
+```sh
 sh <nu
 ```
 It's ridiculous to type `sh` every time you want to run this type of file. This file needs to be turned into a *shell file.* Generally speaking, if a file is executable and contains text, the shell assumes it is a shell file. Change permissions of the file to make it executable:
-```
+```sh
 chmod +x nu
 ```
 Now nu is a shell command that can be run just by typing `nu`.
 - The way the shell runs `nu` is to create a new shell process as if `sh nu` were typed. This shell process is called a *sub shell* (a shell process invoked by the current shell).
 - The new command is only available in your current directory. To make it available to your system or your repertoire, put it in a specific directory and add it to your PATHin your `.profile` or `.bash_profile`. There are different conventions for this. The book suggests a certain `usr/you/bin`.
 - To create a temporary sub shell, you can use the following command:
-```
+```sh
 sh # This creates a sub shell that is different from the parent shell
 ```
 You can do work in this shell and when you are done, just run the command `exit`. _(The book mentions `ctl-d`, but that doesn't work in my machine.)_
@@ -310,16 +310,16 @@ You can do work in this shell and when you are done, just run the command `exit`
 ### 3.4 Command arguments and parameters:
 - How do we supply our new command with arguments such as files to work on? The book provides the example of a command `cx` that make files executable. Arguments are denoted by a sequence of symbols $1 to $9 where $1 stands for the first argument, $2 stands for the second argument and so on until $9. If our shell file contains the following command `chmod +x $1`, then  the command will work on the first argument, and the sub-shell replaces `$1` with `nu` in the command `cx nu`.
 -  How to handle **more than one argument?** You can do the naive `chmod +x $1 $2 $3 $4 $5 $6 $7 $8 $9`. This will work if you have less than 9 files. The unused arguments will be empty strings. If you have more than 9 arguments, the program fails. This can be solved by the the following nifty convention: 
-```
+```sh
 chmod +x $*
 ```
 This way, your command will work no matter how many arguments you have.
 - Files are not the only type of arguments you can add to your commands. Consider the example provided by the book where `grep` is used to grap text from files:
-```
+```sh
 echo 'grep $* usr/lib/phone_book' > search_phones
 ```
 This command returns all lines containing the grepped pattern. There is only one little problem. When the grepped pattern is made of more than one word, it becomes more than one argument. Our command gets two arguments instead of one resulting in the failure of the program. To fix this problem, `$*` needs to be placed inside double quotes. While single quotes doesn't allow any character to be interpreted by the shell, double quotes allow `$`, `\`, and `...` to be interpreted instead of just read as regular characters. The correct command then becomes:
-```
+```sh
 echo 'grep "$*" usr/lib/phone_book' > search_phones
 ```
 Now, the strings that replaces `"$*"` will be a single argument even if it contains a blank.
@@ -327,19 +327,19 @@ Now, the strings that replaces `"$*"` will be a single argument even if it conta
 
 ### 3.5 Program output as arguments:
 - Arguments can be generated explicitly, with metacharacters like `*` or they can be generated by running programs. The output of a pgromar itself can be the argument to a command. You can get the output of a program by enclosing it in back quotes \`...\`'. The following  command:
-```
+```sh
 echo the date is
 ```
 prints the date, not the string "date". The command `date` runs and its output becomes one of `echo`'s arguments.
 - Imagine a command that would grab a title of a to be created file from another file:
-```
+```sh
 touch `cat lala`
 ```
 
 ### 3.6 Shell variables:
 - Shell variables are also called _parameters_. They include variables such PATH and HOME that we saw earlier. They are different from positional arguments such as $1 and $2.
 - Shell variables can be created, accessed and modified. Here is an example of modifiying a shell variable, the PATH:
-```
+```sh
 PATH=:/bin:/usr/bin
 ```
 There must be no spaces around the equal sign and value must be a single word with no blanks. If it contains shell metacharacters, it should be enclosed in single quotes.
@@ -348,13 +348,13 @@ There must be no spaces around the equal sign and value must be a single word wi
 - `set` prints out all shell variables.. There are way too many. To print specific variable values use echo as in `echo $PATH`.
 - The value of a variable is associated with the shell that created it. It is not passed to its child shells. 
 - A shell file (dicussed at 3.3) can't change the variables of their parent shell. But there is a workaround where commands in files are run using the dot command `.` Let's say we have a file games_dir containing a command to add the games directory to the PATH variable. Running this file can be done as follows:
-```
+```sh
 . games_dir
 ```
 games_dir need not be made executable, because the dot comand doesn't actually execute the commands in the file. It merely read them and the current shell executes them. The disadvantage is that the file can't have arguments $1, $2.. etc. 
 - There is a different way to change a shell variable by sub shells. _(I couldn't get it to work and thought the syntax was bad. I will come back to it when need for it rises or see if there is a more modern way of doing that)._
 - To make shell variable values available ot sub shells, the `export` command is used. There is no way of and no reason for making sub shell variables visible to parent shells.
-```
+```sh
 $ x="2000"
 $ sh 			# start subshell
 $ echo $x
@@ -368,12 +368,66 @@ $ echo $x
 `export` is Weird, so only export variables you need to use in all shells and subshells, especially special ones such PATH and HOME.
 
 ### 3.7 More on I/O redirection:
+- When an error occurs, an error message is printed on the terminal. Each program has 3 default files established when it starts. These are *file descriptors.* They are numbered by small integers and are 0, standard input and 1, standard output and 2, standard error.
+- To redirect standard output to some file, you can use the following construct:
+```sh
+diff file1 file2 file3 2>errorfile
+``` 
+There should be no space between `2` and `>`.
+- Redirecting both standard error and standard output to standard output is done with the construct `2>1&`. Redirecting both standard output and standard error to standard error can be done with the construct `1>2&`
+- Commands can be packaged together with their arguments in the same file so that a shell file can be self contained. Such a shell command is called a *here document.* It means the input is right here and not somewhere else. The following is an example of such shell file:
+```sh
+grep "$*" << End
+baba
+caca
+dada
+wawa
+wawa
+End
+```
+The construct `<< End` means everything until the world "End". 
+- The next table lists the various shell I/O redirections: 
+| Character | Description
+| --- | --- |
+| `>file` | direct standard output to *file*
+| `>>file` | append standard output to *file*
+| `<file` | take standard input from *file*
+| `p1 | p2` | connect standard output of *p1* to standard input of *p2*
+| `^` | obsolete synonym for |
+| `n>file` | direct output from file descriptor *n* to *file*
+| `n>>file` | append output from file descriptor *n* to *file*
+| `n>&m` | merge output from file descriptor *n* with file descriptor *m*
+| `n<&m` |	merge input from file descriptor *n* with file descriptor *m*
+| `<<s` | here document: take standard input until next *s* at beginning of a line; subtitute for $, '`...`' and '\''
+| `<<\s` | here document iwht no substitution
+| `<<'s'` | here document iwht no substitution
 
 ### 3.8  Looping in shell programs:
+- Being a programming language, the shell has variables, loopings, conditionals.. etc. Looping over filenames is very common and is done with the shell for statment; _(might be only one to type in terminal rather than in a a shell file)._ A for statment follows this general syntax:
+```sh
+for var in list of words
+do
+	commands
+done
+```
+The following program prints filenames one per line:
+```sh
+for i in *
+do
+	echo $i # notice we are accessing the value here. This is a little different from regular programming languages.
+done
+```
+- It might be desirable to compress this expression into a one liner. do and done are only recognized when they appear after a newline or a semicolon.
+```sh
+for i in *; do echo $i; done
+```
+- Loop can be done over not only filenames, but from anything, a list that you type `for i in 1 2 3 4; ...` or ``for i in  `cat ...` ; ...``.
 
 ### 3.9 _Bundle_: Putting it all together:
+- *(Didn't quite get it! Might come back later!)*
 
 ### 3.10 Why a programmable shell:
+- Some praise of the UNIX shell and enumeration or why it is or superior. It's not just a program for running commands, but a complete language that is both easy to use, conventient and can be extended to do much much more.
 
 ## CHAPTER 4: FILTERS
 
