@@ -461,9 +461,45 @@ grep '$lala' baba # -> There is no one but lala
 		* `[1-2]*` matches a numerical string `12345567`.
 		* `.*` matches everything until a new line `das#(*@ _)*&?221HHbB`.
 		* `.*x` matches everything up to and including the last x in the line.
-	Two important observations about the closure operator:
-		1. Closures apply to only one character and not a sequence. `xy*` is matched by `xyyyyy` and not `xyxyxyxy`.
-		2. Any number of matches includes zero. If you want at least one character matched, duplicate the character or metacharacter as in `0-9][0-9]*`
+Two important observations about the closure operator:
+	1. Closures apply to only one character and not a sequence. `xy*` is matched by `xyyyyy` and not `xyxyxyxy`.
+	2. Any number of matches includes zero. If you want at least one character matched, duplicate the character or metacharacter as in `[0-9][0-9]*`
+- No grep regular expression matches a new line. grep re are applied to each line individually.
+- grep is the oldest of a family that also includes `egrep` and `fgrep`. fgrep can search many literal strings simultaneously, egrep evaluates true regular expressions with an "or" operator and parantheses to group expressions.
+- egrep and fgrep have the option `-f` that allows them to take their input from a file that contains the lined separated patterns to be searched.
+- egrep has a few more features than grep:
+	* parantheses can group expressions, so (xy)* can match an empty string, `xy`, `xyxy` or `xyxyxyxyxy`.
+	* Vertical bar `|` is an "or" operator. `(today | tomorrow)` and `to(day|morrow)` match either `today` or `tomorrow`.
+	* egrep also has two closure operator `+` and `?`. `x+` matches one more x's, while `x?` matches 0 or 1 x's but no more.
+- This one is cool. It searches a dictionary for words that contain all vowels in alphabetical order
+```sh
+egrep '^[^aeiou]*a[^aeiou]*e[^aeiou]*i[^aeiou]*o[^aeiou]*u[^aeiou]*$' dict 
+```
+- fgrep can't interpret metacharacters, but can search for thousands of words in parallel.
+- grep is older has more options than egrep and has **tagged regular expressions *(WHAT"S THAT???????)*** egrep is much faster, but the two can combined in the same program.
+- **Table. grep and egrep Regular Expressions** (Decreasing order of precedence):
+
+| Pattern | Description
+| --- | --|
+
+| Pattern   | Description
+| --- | --- |
+| *c* | any non-special character *c* matches itself
+| `\c` | turn off any special meaning of character c
+| `^` | beginning of line
+| `$` | end of line
+| `.` | any single character
+| `[...]` | any one of characters in `...`; ranges like a-z are legal
+| `[^...]` | any single character not in `...`; ranges are legal
+| `\n` | what the nth \(...\) matched (grep only) *(WHAT?)*
+| `r*` | zero or more occurrances of r
+| `r+` | one or more occurrances of r (egrep only)
+| `r?` | zero or one occurrances of r (egrep only)
+| `r1r2` | r1 followed by r2
+| `r1 | r2` | r1 or r2 (egrep only)
+| `\(r\)` | tagged regular expression (grep only); can be nested
+| `(r)` | regular expression r (egrep only); can be nested
+|  | no regular expression matches a newline.
 
 ### 4. Other filters
 ### 4. The stream editor sed
