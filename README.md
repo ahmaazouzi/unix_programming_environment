@@ -430,6 +430,38 @@ for i in *; do echo $i; done
 - Some praise of the UNIX shell and enumeration or why it is or superior. It's not just a program for running commands, but a complete language that is both easy to use, conventient and can be extended to do much much more.
 
 ## CHAPTER 4: FILTERS
+- **Filters** are a "family of UNIX programs that read some inoput, perform a simple transformation on it, and write some ounput." They include programs we've seen before such as `wc`, `grep`, `sort`. In addition to these filters, this chapter discusses *programmable filters* such `sed` and `awk` which are more generalized and more sophisticated. 
+
+### 4. The grep family
+- grep follows this general syntax:
+```sh
+grep pattern filename
+```
+It searches standard output or named files for *pattern* and print each line containing that pattern. Here are examples of `grep` with some of its common options:
+```sh
+grep -n potato *.java # Output lines with their numbers
+grep From $MAIL  # input from a shell variable
+grep potato s | grep -v mashed # Get line where non-mashed potato appears
+grep -i ahmed phonebook # ignore case
+who | grep ahmed # pipe as input
+ls | grep -v *.c
+```
+- grep works on a restricted form of *regular expressions.* It was invented in an evening through a surgery on the *ed* editor. Unfortunately, regular expression metacharacters are not the same as shell metacharacters. They are generally similar but there are many differences. To avoid potential problems, enclose grep patterns with single quotes.
+- Here is a brief review of these regular expressions along with a detailed table:
+	* `^` **anchors** the pattern to the beginning of a line and `$` anchors it to the end.
+```sh
+grep '^lala' baba # -> lala is sick
+grep '$lala' baba # -> There is no one but lala
+```
+*(End anchor doesn't work on mac. Read somwhere it has to do with how newline is constructed)*
+	* grep supports character classes just like shell as in `[a-z]` which matches any lower case letter. 
+
+
+
+### 4. Other filters
+### 4. The stream editor sed
+### 4. The awk pattern scanning and processing language
+### 4. Good files and good filters
 
 ## CHAPTER 5: SHELL PROGRAMMING 
 
