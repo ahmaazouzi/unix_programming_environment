@@ -453,10 +453,17 @@ ls | grep -v *.c
 grep '^lala' baba # -> lala is sick
 grep '$lala' baba # -> There is no one but lala
 ```
-*(End anchor doesn't work on mac. Read somwhere it has to do with how newline is constructed)*
-	* grep supports character classes just like shell as in `[a-z]` which matches any lower case letter. 
-
-
+	*(End anchor doesn't work on mac. Read somwhere it has to do with how newline is constructed)*
+	* grep supports **character classes** just like shell as in `[a-z]` which matches any lower case letter. If the character class starts with a circumflex `^`, the pattern matches any character except those in the class. `[^A-Z]` means any character but uppercase letters. There is mo  backslash in character classes, to match square brackets and minus signs you can use `[][-]`
+	* A **period** `.` matches any single character.
+	* The **closure** applies to the previous character, metacharacter or character class, and collectively matches any number (zero or more) matches of the character, metacharacter, or character class:
+		* `x*` matches a sequence of x's as long as possible`xxxxxxxx`.
+		* `[1-2]*` matches a numerical string `12345567`.
+		* `.*` matches everything until a new line `das#(*@ _)*&?221HHbB`.
+		* `.*x` matches everything up to and including the last x in the line.
+	Two important observations about the closure operator:
+		1. Closures apply to only one character and not a sequence. `xy*` is matched by `xyyyyy` and not `xyxyxyxy`.
+		2. Any number of matches includes zero. If you want at least one character matched, duplicate the character or metacharacter as in `0-9][0-9]*`
 
 ### 4. Other filters
 ### 4. The stream editor sed
