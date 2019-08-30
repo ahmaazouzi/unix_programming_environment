@@ -572,8 +572,54 @@ sed 3q file
 ```
 This will print the first 3 lines. 
 - A chain of sed commands must be separated by a newline:
-sed
-
+```sh 
+sed 's/^/\t/
+	3q'
+```
+- With the option `-f`, sed can get its commands from a file as in:
+```sh
+sed -f commandfile sourcefile
+```
+- `q` prints its input up to and including the first line matching *pattern*:
+```sh
+sed '/pattern/q' file
+```
+- `d` deletes every line containing the matching *pattern*:
+```sh
+sed '/pattern/d' file
+```
+- With a combination of the command `p` which prints lines containing the given patterns and the option -n for turning off the usual sed printing sed can act like grep:
+```sh
+sed -n '/pattern/p' file  
+sed -n '/pattern/!p' file # this acts in the same way as grep -v
+```
+- Philosophy time: why do we still have both grep and sed? grep is older and simpler and sometimes does things sed can't do!
+- A new line  can be inserted after each line with:
+```sh
+sed 's/$/\
+/' file
+```
+- The next example is of a command that replaces each string of blanks or tabs with a newline, splitting input into single words
+```sh
+sed 's/[ \t][ \t]*/\
+/g' file
+```
+`[ \t]` means a blank or tab; `[	\t][ \t]*`, as seen before, means 1 or more. (`[ \t]*` is for zero or more, but we have 2 `[ \t]*`'s).
+- **Pairs of regular expressions or line numbers** can be used to select ranges of lines to be acted upon:
+```sh
+sed  -n '3,9p' file
+sed '1,10p' file
+sed '$d' file # delete last line
+```
+- Line numbers don't reset at the beginning of file, so numbering flows from one file to the next.
+- sed can't read backward. Once a line is read, it's gone forever.
+- sed also allows outputting to multiple files, possibly different patterns to different files:
+```sh
+sed -n '/pat/w file1
+	/pat/!w file2' filenames...
+```
+- sed has its limitations but it's fast and efficient. 
+- *(I skipped a few things in this section. sed needs its own notes! I might work on that in the future)*
 
 ### 4. The awk pattern scanning and processing language
 ### 4. Good files and good filters
