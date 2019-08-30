@@ -479,9 +479,6 @@ egrep '^[^aeiou]*a[^aeiou]*e[^aeiou]*i[^aeiou]*o[^aeiou]*u[^aeiou]*$' dict
 - grep is older has more options than egrep and has **tagged regular expressions *(WHAT"S THAT???????)*** egrep is much faster, but the two can combined in the same program.
 - **Table. grep and egrep Regular Expressions** (Decreasing order of precedence):
 
-| Pattern | Description
-| --- | --|
-
 | Pattern   | Description
 | --- | --- |
 | *c* | any non-special character *c* matches itself
@@ -502,7 +499,82 @@ egrep '^[^aeiou]*a[^aeiou]*e[^aeiou]*i[^aeiou]*o[^aeiou]*u[^aeiou]*$' dict
 |  | no regular expression matches a newline.
 
 ### 4. Other filters
+- Unix has a bunch of small filters with a ton of functionality. Some of the more common filtes include:
+- `sort` as seen before sort input by lines according to ASCII order. A rich set of options makes `sort` very useful:
+	- `-f`: folds characters, hence ignoring case.
+	- `-d` (dictionary): ignores characters other than letters, numbers and blanks.
+	- `-n`: sorts by numeric value.
+	- `-r`: reverses sorting order. For example, `ls -s | sort -nr` reverse sorts files by size.
+	- `-o`: specifies an output file (which can be one of the input files).
+	- `-u`: discards all but one of identical line groups *(WHAT??)*
+sort acts mainly on lines, but it can also be directed to certain fields. `+m` means the comparison skips the first *m* fields, while `+0` starts at the start of the field:
+```sh
+ls -l | sort +3n # sorts files by byte count numeric value
+```
+multiple keys can be used for sorting as in
+```sh
+sort +0f +0 -u filenames
+```
+This line seems to first sort line alphabetically ignoring case distinctions with `+0f`, then do secondary sorts on alphabetically equal lines based on case with `+0` and then `-u` discards adjacent duplicates.
+- `uniq` functions in a similar way to the `-u` option of sort. It discard adjacent duplicates regardless of weather lines are sorted or not. It works great for removing multiple blanks. Options include:
+	- `-d`: prints only duplicated lines.
+	- `-u`: prints inly unique lines.
+	- `-c`: counts the number or occurrances of a line.
+- `comm` compares files. Given twp sorted files, `comm` prints 3 columns, first column as only lines from f1, column 2 only files from f2, and column 3 has files from both. Options include the possibility of suppressing any of the output columns. `-2` suppresses the second column, and `-23` suppresses columns 2 and 3. These options can be useful is comparing directories.
+```sh
+comm -12 f1 f2 # prints lines in both files
+comm -23 f1 f2 # prints lines only in first file
+```
+- `tr` transliterate characters. This is mainly used to convert between character cases.
+```sh
+tr a-zA-Z # this needs some experimentation
+```
+
 ### 4. The stream editor sed
+- `sed` is based on the ed editor. Its commands follow this general format:
+```sh
+sed 'list of ed commands' filenames ...
+```
+This command reads lines from the input files one line at a time, apply each of the commands in the list in order, and writes its edited form to the standard output. As an example, the following the command will change each instance of unix to linux:
+```sh
+sed 's/unix/linux/g' filenames >output
+sed 's/unix/linux/g' file >file # This is bad bad, a big NO NO
+```
+- `s` stands for substitute. It matches does the regex matching.
+- `g` makes the change globally for every word in the line, not just the first occurrance. 
+- sed does not change its input, but write the altered form to standard output.
+- Don't redirect the output of sed to its input file. You need to use a temporary file for that or the `overwrite` program from chapter 5.
+- It is necessary to always enclose sed arguments in single quotes because of similarities with shell metacharacters.
+- Here are more examples of how sed works:
+```sh
+sed 's/.*\t//' # deletes all characters up to and including a rightmost tab
+sed 's/ .* //' # replaces blank and everything that follow it up to another blank by a single blank
+who | sed 's/.* //' # grabs user's name
+``` 
+-_(typing a tab in osx terminal in sed is weird. It's done through: ctrl-V followed by TAB key)_
+- A sequence for indenting lines in a file can be done through these different versions of the same program:
+```sh
+sed 's/^/\t/' file
+```
+This script puts indents even in empty lines. A better version that doesn't indent empty lines is:
+```sh
+sed '/./s/^/\t/' file
+```
+Prefixing a pattern in the form `/pattern/` allows sed to select which lines to act upon. The `/./` matches lines that have least one character other than a newline. This will still output all lines, either changed or unchanged.
+It is also possible to do commands on lines that don't match the selection pattern with the use of `!`. 
+```sh
+sed '/^$/!s/^/\t/' file
+```
+`/^$/` means the beginning is adjacent to the end, meaning it's an empty line. *(A little bug I encountered is that the first empty line for some reason is not recognized as empty)*
+- sed allows to print just the x leading lines with the command *x*q (3q, 10q ... etc.).
+```sh
+sed 3q file
+```
+This will print the first 3 lines. 
+- A chain of sed commands must be separated by a newline:
+sed
+
+
 ### 4. The awk pattern scanning and processing language
 ### 4. Good files and good filters
 
