@@ -661,6 +661,45 @@ sed -n '6,13p' README.md | awk -F: '{print $2}'
 This command changes the separator to a colon `:`.
 - Tabs and blanks are special as separators. They are bey default separators and leading blanks and tabs are discarded. If anything other than blanks is set as a sperator, then leading separators are counted to determine the fields. this applies to tabs as well
 
+#### Fields:
+- You can print line numbers using `NR`:
+```sh
+awk '{print NR, $0}' filenames
+```
+$0 stands for the unchanged line in its entirety.
+- To have more control over how printing is done, use `printf` which is similar if not identical to C's printf:
+```sh
+awk '{ printf "%4d %s\n", NR, $0}' filenames
+```
+with `printf` you need to add newline and you can for example specify the length of a number field with something like `%4d`.
+
+#### Patterns:
+- There are several ways of checking if a field is empty:
+```sh
+awk -F: '$2 == ""' Filenames 		# empty field
+awk -F: '$2 ~ /^$/' Filenames 		# matches empty line
+awk -F: '$2 !~ /./' Filenames 		# does't match any character
+awk -F: 'length($2) == 0' Filenames # length is zero
+```
+- Patterns are generally used for data validation. Regular expressions are enclosed in slashes and matching is based on the operator `~`. `!` is for negation.
+- `substr(s,m,n)` can be used to select substrings as in:
+```sh
+date | awk '{ print substr($4, 1, 5)}' # produces something like 02:00
+```
+
+#### The `BEGIN` and `END` patterns:
+- `BEGIN` actions are executed before the first line is read. Initialize variables, print headings.. etc. 
+- `END` actions are executed after the last line is read. Can e.g. for printing the number of lines with NR.
+```sh
+awk 'BEGIN {FS = ":"}
+{print $2}' filenames
+awk 'END {print NR}' filenames
+``` 
+
+#### Arithmetic and variables:
+
+
+
 ### 4. Good files and good filters
 ## CHAPTER 5: SHELL PROGRAMMING 
 
