@@ -696,7 +696,55 @@ awk 'BEGIN {FS = ":"}
 awk 'END {print NR}' filenames
 ``` 
 
-#### Arithmetic and variables:
+#### Arihtmetic and variables:
+- awk does computations on its input making powerful. The following sums the values of the first column:
+```sh
+awk '{s += $1}
+END {print s}' filenames
+```
+In this example, there was no need for Initializing the s variables. awk variables are automatically Initialized to 0 by default.
+- Strings can also be stored in variables as in `{s = "abc"}`. They are also initialized to empty strings. The context determines whether a variable is treated as a number or string. 
+- Next table is of awk built-in variables.
+| Variable | Value
+| --- | --- |
+| `FILENAME` | name of current file
+| `FS` | field separator character (default blank & tab)
+| `NF` | number of fields in input record
+| `NR` | number of input record
+| `OFMT` | output format for numbers (default `%g`)
+| `OFS` | output field separator string (default tab)
+| `ORS` | output record separator string (default newline)
+| `RS` | input record separator character (default newline)
+
+- As for operators, they are similar to those of C and most other C-like languages. The one exception is tilde `~` and `!~` used for matching regex.
+
+#### Control flow:
+- The following is fizzbuzz in awk. It shows how control flow works:
+
+```sh
+awk '
+BEGIN {
+	for (i = 1; i <= 100; i++){
+		if (i % 15 == 0) print"fizzbuzz"
+		else if (i % 5 == 0) print "buzz"
+		else if (i % 3 == 0) print "fizz"
+		else print i
+	}
+}' $*
+```
+- This is very similar to how C-like languages do thing. The few things that are different include the keywords BEGIN and END. When not preceded by BEGIN, a comparison like `NR > 0` is a equivalent to `if (NR > 0)`. This seems like a python with curly brackets or groovy
+- There is also a while statment that is syntactically identical to those found in C languages.
+- You can break out of a loop using `break`. `continue` resumes iteration. `exit` transfers execution immediately to the END pattern. `next` jumps to the next input line.
+- Statements can be separated by new lines or semicolons.
+
+#### Arrays:
+- It's easy to work with arrays in awk. They are similar to python's lists. They resize and are declared and initialized automatically as in the following example:
+```sh
+awk '{ line[NR] = $1}
+END { for (i = 0; i < 10; i++ )
+	print line[i]
+}' $*
+```
 
 
 
