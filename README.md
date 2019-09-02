@@ -746,6 +746,52 @@ END { for (i = 0; i < 10; i++ )
 }' $*
 ```
 
+#### Built in variables:
+| Variable  | Usage
+| --- | --- |
+| `cos(x)` | cosine
+| `exp(x)` | exponential
+| `getline()` | reads next input file line, returns 0 if end of file, 1 otherwise
+| `index(s1,s2)` | position of string s2 in string s1; returns 0 if not present
+| `int(x)` | integer part of x; truncates toward 0
+| `length(x)` | get length of string s
+| `log(x)` | natural logarithm
+| `sin(x)` | sine
+| `split(s, a, c)` | split string s using separator c into array a; returns length of a
+| `sprintf(fmt, ...)` | print according to specification fmt 
+| `substr(s, m, n)` | n-character substring of s beginning at position m
+
+#### Associative arrays
+- Values other than integers can be used as subscripts in associative arrays. Associative arrays are hashed key value pairs. The follwing program sums values whose first field is identical:
+```sh 
+# list of pairs with duplicate keys
+# a 1
+# b 2
+# b 2
+# d 4
+# d 3
+# a 0
+
+awk '{sum[$1] += $2}
+END for (i in sum) {print sum[i]}
+'
+```
+- The `for ... in:` loop is not the same as the regular array for loop. It doesn't iterate over the elements of the array but it iterates over the subscripts but the result is similar, although it might require sorting after the loop is done.
+- The following program outputs the word frequency of its input:
+```sh
+awk '{ for ( i = 1; i <= NF; i++ ) freq[$i]++} # iterates over line fields
+END {for (w in freq) print w, freq[w]}
+' $* | sort +1 -nr | sed 20q # 20q only print first 20 line
+```
+
+#### interacting with the shell
+- Interacting with the shell can get a little tricky. Interactively choosing what field number to print out can be done in different ways:
+```sh
+awk '{ print $'$1'}' # $1 is outside quotes so it's interpreted as a shell variable, an argument to this program
+awk "{ print \$ $1 }" # Remember from shell var table that \ and $ are interpreted inside double quotes
+ ```
+ - These scripts can't can only take standard input and can't get their input from files. That requires shell programming from the next chapter.
+
 
 
 ### 4. Good files and good filters
