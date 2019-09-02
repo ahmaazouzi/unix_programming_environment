@@ -791,11 +791,14 @@ awk '{ print $'$1'}' # $1 is outside quotes so it's interpreted as a shell varia
 awk "{ print \$ $1 }" # Remember from shell var table that \ and $ are interpreted inside double quotes
  ```
  - These scripts can't can only take standard input and can't get their input from files. That requires shell programming from the next chapter.
-
-
+- *(Skipping the following calender subsection. I prefer to use small atomic filters piped together as the next section recommend).*
 
 ### 4. Good files and good filters
+- It's more common to use awk and other filters in small scripts to do a single thing, following the unix philosophy. Small scripts are also piped together to solve bigger problems.
+- The output of unix programs follow a general easy to understand format that can also be easily input into pipes and other programs. That output is divided into lines, divided into fields by tabs or blanks. Following the general way unix programs are written can make your scripts easy to use and effective.
+
 ## CHAPTER 5: SHELL PROGRAMMING 
+
 
 
 
