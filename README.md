@@ -798,26 +798,33 @@ awk "{ print \$ $1 }" # Remember from shell var table that \ and $ are interpret
 - The output of unix programs follow a general easy to understand format that can also be easily input into pipes and other programs. That output is divided into lines, divided into fields by tabs or blanks. Following the general way unix programs are written can make your scripts easy to use and effective.
 
 ## CHAPTER 5: SHELL PROGRAMMING 
+- *(I will try to create my own little programlets that imitate the book programs if they are not time consuming).*
+- The shell is also a programming language, that's why it has too many details.
+- The authors Admit that the manual can be cryptic, so they focused on examples rather than listing features of the shell.
+- Shell programs should follow better standards and be robust; handle bad input and gives meaningful error messages.
 
+### 5.1 Modifying a shell program:
+- The book suggests modifying the `cal` program, allowing it to take month names as arguments while preserving its original behavior and functionality.
+- The `case` statement allows you do take different numbers and types of arguments; it similar switch statments in C and it follows the following general fomrat
+```sh
+case word in
+	pattern ) command ;;
+	pattern ) command ;;
+	...
+esac
+```
+This statements allows you to execute a command if `word` matches the first one of the listed patterns.
+- The following is a little program based on `wc` with the added functionality of selecting the first n lines for which words are to be counted:
+```sh
+#wcp: wc on steroids; also counts words on first n lines
 
+case $# in
+	[0-1]) /usr/bin/wc $1; exit;
+esac
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+case $1 in
+	[1-9]|[1-9][0-9]|[1-9][0-9][0-9]
+	) head -n $1 $2 | wc;;
+	* ) echo "That ain't gonna work, mate!";;
+esac
+```
