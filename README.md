@@ -828,3 +828,13 @@ case $1 in
 	* ) echo "That ain't gonna work, mate!";;
 esac
 ```
+- The shell variable `$#` denotes the number of arguments a file was called with. Other special shell variables are included in the following table:
+-
+- One nifty shell command is `set`. When When called with an argument, it resets the values of $1, $2 .. etc. with the values of parts of that argument. The following example clarifies such usage:
+```
+$ set `date`;
+$ echo $1
+Mon
+$ echo $2
+Sep 
+``` 
