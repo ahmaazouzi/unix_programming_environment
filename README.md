@@ -805,7 +805,7 @@ awk "{ print \$ $1 }" # Remember from shell var table that \ and $ are interpret
 
 ### 5.1 Modifying a shell program:
 - The book suggests modifying the `cal` program, allowing it to take month names as arguments while preserving its original behavior and functionality.
-- The `case` statement allows you do take different numbers and types of arguments; it similar switch statments in C and it follows the following general fomrat
+- The `case` statement allows you do take different numbers and types of arguments; it similar switch statments in C and it follows the following general fomrat:
 ```sh
 case word in
 	pattern ) command ;;
@@ -824,13 +824,29 @@ esac
 
 case $1 in
 	[1-9]|[1-9][0-9]|[1-9][0-9][0-9]
-	) head -n $1 $2 | wc;;
+	) head -n $1 $2 | /usr/bin/wc;;
 	* ) echo "That ain't gonna work, mate!";;
 esac
 ```
+Notice how the original system wc is called with it's full path `/usr/bin/wc` to prevent the system from confusing it with the `wc` we just created. Relying on the old name while keeping the old functionality allows the users to avoid learning new tricks and new command names.
 - The shell variable `$#` denotes the number of arguments a file was called with. Other special shell variables are included in the following table:
--
-- One nifty shell command is `set`. When When called with an argument, it resets the values of $1, $2 .. etc. with the values of parts of that argument. The following example clarifies such usage:
+| shell variable| usage
+| --- | --- |
+| `$#` | the number of arguments
+| `$*` | all arguments tp shell
+| `$@` | similar to $\*; see section 5.7
+| `$-` | options applied to the shell
+| `$?` | return value of the last 
+| `$$` | process-id of the shell
+| `$!` | process-id of the last command started with  `&`
+| `$HOME` | default argument for `cd` command
+| `$IFS` | list of characters that separate words in arguments
+| `$MAIL` | file that, when changed, triggers "you have mail"
+| `$PATH` | list of directories to search for commanda
+| `$PS1` | prompt string, default '$ '
+| `$PS2` | prompt string for continued command line, default '> '
+
+- One nifty shell command is `set`. When called without arguments, it shows the values of shell variables. When called with an argument, it resets the values of $1, $2 .. etc. with the values of parts of that argument. The following example clarifies such usage:
 ```
 $ set `date`;
 $ echo $1
@@ -838,3 +854,18 @@ Mon
 $ echo $2
 Sep 
 ``` 
+Some of `set`'s more prominent options include `-v` and `-x` They echo commands as they are being processed by the shell.
+- This patterns might be confusing `[1-9][0-9][0-9]`. This is how number cases are dealt with in the shell; a little similar to regex. Another similar pattern is `[Jj]an*` which should be self-explanatory and is the same as `[jan*|Jan*]`. This table lists the shell pattern matching rules:
+
+| pattern | rules
+| --- | --- |
+| `*` | match any string, including 
+| `?` | match any single character
+| `[ccc]` | match any of the characters in [*ccc*]
+| `"..."` | same as `'...' `; match ... exactly, protects soecial characters
+| `\c` | match *c* literally
+| `a|b` | match either a or b in `case` expressions only
+| `/` | In filenames, matched only by an explicit `/` in the expression. In `case` matched like any other character.
+| `.` | as the first character of a filename, is matched by an explicit `.` in the expression.
+- It's unfortunate that shell pattern matching is different from regex. Some of the differences are mere design mistakes, while others make a lot of sense. The book offers the following examples where the regex is too clunky and would be really clumsy to type on the terminal. The terse shell expression `*.php` would've been replaced by the hideous `^?*.php$`.
+
