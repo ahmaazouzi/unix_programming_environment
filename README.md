@@ -867,5 +867,81 @@ Some of `set`'s more prominent options include `-v` and `-x` They echo commands 
 | `a|b` | match either a or b in `case` expressions only
 | `/` | In filenames, matched only by an explicit `/` in the expression. In `case` matched like any other character.
 | `.` | as the first character of a filename, is matched by an explicit `.` in the expression.
+
 - It's unfortunate that shell pattern matching is different from regex. Some of the differences are mere design mistakes, while others make a lot of sense. The book offers the following examples where the regex is too clunky and would be really clumsy to type on the terminal. The terse shell expression `*.php` would've been replaced by the hideous `^?*.php$`.
+
+### 5.2 Which command is `which`:
+- It is easy to get a version of a command that is not what you expect when you make your own private versions of general commands like `ls` or `cal`. This has to do mainly with the components of the shell variable `PATH`. Remember that the system searches the path sequentially; the executable found in the first directory of the path is what gets run. 
+- The following is the "pseudo-code" of a shell program that loop over the `PATH` directories and search for the named executable file. 
+```
+for i in each component of PATH
+do
+	if given name is in directory i
+		print its full pathname
+done
+```
+- The PATH should first be separated by spaces. colons need be replaced by blanks. A null string is the same as a dot in the shell which means the current directory. The following sed script can do this:
+```sh 
+echo $PATH | sed 's/^:/.:/
+				  s/::/:.:/g
+				  s/:$/:./
+				  s/:/ /g'
+```
+The null can be either in the middle or either end of the PATH string. Those sed commands can be run separately through pipes, but as you can see, they can also be done this way. 
+- The `test` command can tell you if a file exists in a directory. It has the following options:
+	-f: file exists and is not a directory
+	-w: It's writable.
+	-r: It's readable. 
+testt doesn't do anything besides returning an exit value. If the exit value is 0, it's true. Otherwise it's false (we know this already). Every time you run a program, its exit value is stored in the shell variable `$?` as seen in one of the table.
+- If statement in the shell follows the following genral format:
+```
+if command
+then
+	commands if condition true
+else
+	commands if condition false
+fi
+```
+The newline or a semicolon are necessary before then, else and fi.
+- case statements can be faster than if. They do pattern matching directly in the shell, while if run commands and can do extra stuff case can't. Basically if you can use both, prefer case.
+- The following is the `which` program that fetches a program in the PATH list of directories:
+```sh
+case $# in
+	0) echo 'Usage: which command' 1>&2; exit 2
+		;;
+esac
+for i in `echo $PATH | sed 's/^:/.:/
+				  s/::/:.:/g
+				  s/:$/:./
+				  s/:/ /g'`
+do
+	if test -x $i/$1
+	then 
+		echo $i/$1
+		exit 0
+	fi
+done
+exit 1
+```
+- This is a beautiful program and the way it was used to teach features of the shell is ingenious. I bet Kernighan wrote this chapter.
+- `1>&2` redirects an error message to standard error so it doesn't get lost in the pipeline.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
