@@ -453,8 +453,8 @@ ls | grep -v *.c
 grep '^lala' baba # -> lala is sick
 grep '$lala' baba # -> There is no one but lala
 ```
-	*(End anchor doesn't work on mac. Read somwhere it has to do with how newline is constructed)*
-	* grep supports **character classes** just like shell as in `[a-z]` which matches any lower case letter. If the character class starts with a circumflex `^`, the pattern matches any character except those in the class. `[^A-Z]` means any character but uppercase letters. There is mo  backslash in character classes, to match square brackets and minus signs you can use `[][-]`
+*(End anchor doesn't work on mac. Read somwhere it has to do with how newline is constructed)*
+* grep supports **character classes** just like shell as in `[a-z]` which matches any lower case letter. If the character class starts with a circumflex `^`, the pattern matches any character except those in the class. `[^A-Z]` means any character but uppercase letters. There is mo  backslash in character classes, to match square brackets and minus signs you can use `[][-]`
 * A **period** `.` matches any single character.
 * The **closure** applies to the previous character, metacharacter or character class, and collectively matches any number (zero or more) matches of the character, metacharacter, or character class:
 	* `x*` matches a sequence of x's as long as possible`xxxxxxxx`.
