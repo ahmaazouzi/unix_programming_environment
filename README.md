@@ -925,6 +925,12 @@ exit 1
 ```
 - This is a beautiful program and the way it was used to teach features of the shell is ingenious. I bet Kernighan wrote this chapter.
 - `1>&2` redirects an error message to standard error so it doesn't get lost in the pipeline.
+- Two interesting shell operators that can save a lot of keystrokes in conditionals are `||` and `&`. Here are two examples that illustrate their use:
+```sh
+test -f somefile || echo somefile "does not exist"
+test -f somefile && echo somefile "exists, indeed"
+```
+If the first command's return status is 0, the command to the right of `||` is ignored; if it were 1, the command to the right is executed. The command to the right of `&&` will only run if the test evaluates to true.
 
 
 
