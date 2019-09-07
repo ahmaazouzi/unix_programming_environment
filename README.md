@@ -932,6 +932,34 @@ test -f somefile && echo somefile "exists, indeed"
 ```
 If the first command's return status is 0, the command to the right of `||` is ignored; if it were 1, the command to the right is executed. The command to the right of `&&` will only run if the test evaluates to true.
 
+### 5.4 while and until loops:
+- The `while` loops follows this general formula:
+```
+while command
+do
+	loop as long as as command returns true
+done
+```
+while the `until` command can be represented by:
+```
+until command
+do
+	loop as long as as command returns false
+done
+```
+- The following examples illustrate these constructs use:
+```sh
+while sleep 60
+do
+	who | grep johndoe
+done
+
+until who | grep johndoe
+do
+	sleep 60
+done
+```
+
 
 
 
