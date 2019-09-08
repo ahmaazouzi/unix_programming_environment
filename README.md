@@ -953,7 +953,9 @@ while sleep 60
 do
 	who | grep johndoe
 done
-
+```
+This program will keep checking if johndoe every minute and print his info when he logs in. If he is already logged in, or just has just logged in after this program starts, you will have to wait 60 seconds before this program tells you that. It will aslo keep printing johndoe information as long as he is logged in. The next program is more interesting; it keeps looping and checking if johndoe is logged in. Once he is logged in, it prints his info and the loop stops.
+```sh
 until who | grep johndoe
 do
 	sleep 60
