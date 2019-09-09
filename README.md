@@ -981,21 +981,20 @@ do
 done
 ```
 3. The PATH is usually fixed in the shell file so that it looks only within that path and nowhere else. This prevents running unwanted programs with the same name as the current one that reside somewhere else in the system. So the path that you specify in your shell file overrides the actual system-wide PATH.
+- The use of **braces with variables** has special meanings. the following construct:
+```sh
+t=${1-60}
+```
+This is similar to default variable values in languages like python. It means set t to the given argument. Another rather self-explanatory example is:
+```sh
+echo $varx
+echo ${var}x
+```
+these two variables ared different. The first example prints whatever is contained by the variable varx. The second one prints the contents of the variable var and append 'x' to its end.
+```sh
+echo {something?I am sick}
+```
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
