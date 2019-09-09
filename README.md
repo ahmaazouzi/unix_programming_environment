@@ -954,14 +954,34 @@ do
 	who | grep johndoe
 done
 ```
-This program will keep checking if johndoe every minute and print his info when he logs in. If he is already logged in, or just has just logged in after this program starts, you will have to wait 60 seconds before this program tells you that. It will aslo keep printing johndoe information as long as he is logged in. The next program is more interesting; it keeps looping and checking if johndoe is logged in. Once he is logged in, it prints his info and the loop stops.
+This program will keep checking if johndoe every minute and print his info when he logs in. If he is already logged in, or just has just logged in after this program starts, you will have to wait 60 seconds before this program tells you that. It will aslo keep printing johndoe information as long as he is logged in. The next program is more interesting; it keeps looping and checking if johndoe is logged in. Once he is logged in, it prints his info. Grep returns an exti status 0 (true) which signals that the loop stops:
 ```sh
 until who | grep johndoe
 do
 	sleep 60
 done
 ```
-
+- The book goes on in describing a program that keeps track of all system users. A few thing to note:
+1. the shell variable `$$` is used to distinguish temporary files (that reside in the `/tmp` directory) based on which processes run them as in `newfile=/tmp/johndoe.$$`. When you print this file in the shell, you'd get something like `johndoe.40301` where 40301 refers to the id of the process running this file. 
+2. A **forever loop**: can be done with the following 
+expression: 
+```sh
+while true
+do
+	echo something
+	sleep 3
+done
+```
+An even shorter and more efficient construct that doesn't use a command from the file system is `:` which can be used this way:
+```sh
+while :
+do
+	echo something
+	sleep 3
+done
+```
+3. The PATH is usually fixed in the shell file so that it looks only within that path and nowhere else. This prevents running unwanted programs with the same name as the current one that reside somewhere else in the system. So the path that you specify in your shell file overrides the actual system-wide PATH.
+ 
 
 
 
