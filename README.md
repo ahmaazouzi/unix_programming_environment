@@ -2,7 +2,57 @@
 
 This is an old book but it's held in high esteem by many. Seeing how many linux commands resemble those of unix and having enjoyed the C book, co-written by Kernighan, I thought I'd skim over this one and see what it still has to offer. These are my notes on what I understand of the book and what I manage to read of it. I will use macOS 10.x to test the scripts provided in the book and probably report if they are still relevant. I might skip the few commands and things I already know about how to use the terminal.
 
-- [Preface/Trivia](#preface/trivia)
+- [THE UNIX PROGRAMMING ENVIRONMENT](#the-unix-programming-environment)
+	* [PREFACE/TRIVIA](#preface/trivia)
+	* [CHAPTER 1 UNIX FOR BEGINNERS](#chapter-1-unix-for-beginners)
+		+ [1.1 Getting started](#11-getting-started)
+		+ [1.2 Files and common commands](#12-files-and-common-commands)
+		+ [1.3 Directories](#13-directories)
+		+ [1.4 The shell](#14-the-shell)
+		+ [1.5 The rest of the unix system](#15-the-rest-of-the-unix-system)
+	* [CHAPTER 2 THE FILE SYSTEM](#chapter-2-the-file-system)
+		+ [2.1 The basics of files](#21-the-basics-of-files)
+		+ [2.2 What is in a file?](#22-what-is-in-a-file)
+		+ [2.3 Filenames and directories](#23-filenames-and-directories)
+		+ [2.4 Permissions](#24-permissions)
+		+ [2.5 Inodes](#25-inodes)
+		+ [2.6 The directory hierarchy](#26-the-directory-hierarchy)
+		+ [2.7 Devices](#27-devices)
+	* [CHAPTER 3 USING THE SHELL](#chapter-3-using-the-shell)
+		+ [3.1 Command line structure](#31-command-line-structure)
+		+ [3.2 Metacharacters](#32-metacharacters)
+		+ [3.3 Creating new commands](#33-creating-new-commands)
+		+ [3.4 Command arguments and parameters](#34-command-arguments-and-parameters)
+		+ [3.5 Program output as arguments](#35-program-output-as-arguments)
+		+ [3.6 Shell variables](#36-shell-variables)
+		+ [3.7 More on I/O redirection](#37-more-on-i/o-redirection)
+		+ [3.8  Looping in shell programs](#38--looping-in-shell-programs)
+		+ [3.9 _Bundle_ Putting it all together](#39-_bundle_-putting-it-all-together)
+		+ [3.10 Why a programmable shell](#310-why-a-programmable-shell)
+	* [CHAPTER 4 FILTERS](#chapter-4-filters)
+		+ [4. The grep family](#4-the-grep-family)
+		+ [4. Other filters](#4-other-filters)
+		+ [4. The stream editor sed](#4-the-stream-editor-sed)
+		+ [4. The awk pattern scanning and processing language](#4-the-awk-pattern-scanning-and-processing-language)
+		+ [Fields](#fields)
+		+ [Fields](#fields)
+		+ [Patterns](#patterns)
+		+ [The `BEGIN` and `END` patterns](#the-begin-and-end-patterns)
+		+ [Arihtmetic and variables](#arihtmetic-and-variables)
+		+ [Control flow](#control-flow)
+		+ [Arrays](#arrays)
+		+ [Built in variables](#built-in-variables)
+		+ [Associative arrays](#associative-arrays)
+		+ [interacting with the shell](#interacting-with-the-shell)
+		+ [4. Good files and good filters](#4-good-files-and-good-filters)
+	* [CHAPTER 5 SHELL PROGRAMMING](#chapter-5-shell-programming)
+		+ [5.1 Modifying a shell program](#51-modifying-a-shell-program)
+		+ [5.2 Which command is `which`](#52-which-command-is-which)
+		+ [5.3 while and until loops](#53-while-and-until-loops)
+		+ [5.4 Traps catching interrupts](#54-traps-catching-interrupts)
+		+ [5.5 Replacing a file](#55-replacing-a-file)
+
+<!-- - [Preface/Trivia](#preface/trivia)
 - [Chapter 1: Unix for Beginners](#chapter-1-unix-for-beginners)
 - [Chapter 2: The File System](#chapter-2-the-file-system)
 - [Chapter 3: ](#chapter-3-)
@@ -11,7 +61,7 @@ This is an old book but it's held in high esteem by many. Seeing how many linux 
 - [Chapter 6: ](#chapter-6-)
 - [Chapter 7: ](#chapter-7-)
 - [Chapter 8: ](#chapter-8-)
-- [Chapter 9: ](#chapter-9-)
+- [Chapter 9: ](#chapter-9-) -->
 
 ## PREFACE/TRIVIA:
 - Unix was created in 1969 in Bell Labs and rewritten in C in 1973. In 1974, it was licensed to universities (the so called BSD).
@@ -764,13 +814,13 @@ END { for (i = 0; i < 10; i++ )
 #### Associative arrays
 - Values other than integers can be used as subscripts in associative arrays. Associative arrays are hashed key value pairs. The follwing program sums values whose first field is identical:
 ```sh 
-# list of pairs with duplicate keys
-# a 1
-# b 2
-# b 2
-# d 4
-# d 3
-# a 0
+	# list of pairs with duplicate keys
+	# a 1
+	# b 2
+	# b 2
+	# d 4
+	# d 3
+	# a 0
 
 awk '{sum[$1] += $2}
 END for (i in sum) {print sum[i]}
@@ -816,7 +866,7 @@ esac
 This statements allows you to execute a command if `word` matches the first one of the listed patterns.
 - The following is a little program based on `wc` with the added functionality of selecting the first n lines for which words are to be counted:
 ```sh
-#wcp: wc on steroids; also counts words on first n lines
+ #wcp: wc on steroids; also counts words on first n lines
 
 case $# in
 	[0-1]) /usr/bin/wc $1; exit;
