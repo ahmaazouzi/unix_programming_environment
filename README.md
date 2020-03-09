@@ -3,7 +3,7 @@
 This is an old book but it's held in high esteem by many. Seeing how many linux commands resemble those of unix and having enjoyed the C book, co-written by Kernighan, I thought I'd skim over this one and see what it still has to offer. These are my notes on what I understand of the book and what I manage to read of it. I will use macOS 10.x to test the scripts provided in the book and probably report if they are still relevant. I might skip the few commands and things I already know about how to use the terminal.
 
 - [THE UNIX PROGRAMMING ENVIRONMENT](#the-unix-programming-environment)
-	* [PREFACE/TRIVIA](#preface-trivia)
+	* [PREFACE AND TRIVIA](#preface-and-trivia)
 	* [CHAPTER 1 UNIX FOR BEGINNERS](#chapter-1-unix-for-beginners)
 		+ [1.1 Getting started](#11-getting-started)
 		+ [1.2 Files and common commands](#12-files-and-common-commands)
@@ -63,7 +63,7 @@ This is an old book but it's held in high esteem by many. Seeing how many linux 
 - [Chapter 8: ](#chapter-8-)
 - [Chapter 9: ](#chapter-9-) -->
 
-## PREFACE/TRIVIA:
+## PREFACE AND TRIVIA:
 - Unix was created in 1969 in Bell Labs and rewritten in C in 1973. In 1974, it was licensed to universities (the so called BSD).
 - Unix is successful because of its portability, the fact that it's written in C, a high level language. 
 - The **Unix philosophy** states that the relationship among different programs is what makes a great system. Even trivial programs can be combined to create great software, if they work well together.
