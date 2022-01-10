@@ -167,14 +167,167 @@ result = re.sub(r"^(\w+), (\w+)$", r"\2 \1", "White, Walter")
 print("Welcome to our amazing adder!")
 
 cont = "y"
+
 while cont == "y":
     a = b = ""
     a = input("Enter first num: ")
     b = input("Enter second num: ")
     print(int(a) + int(b))
     cont = input("Do you wanna perform another operation? [y to continue] ")
+
 print("Good bye!")
 ```
 - The most important thing about the example above is the variable `cont` and how it's used in a loop.
+
+### Environment Variables:
+- I forgot that you can access environment variables with typing **`env`** on the shell.
+- Python gives you an out of the box function to retrieve environment variables. I believe this should work uniformly across OSs.
+```py
+import os
+
+print ("HOME: " + os.environ.get("HOME", "")) # Don't get spooked by empty string. It's there to avoid error. Basically something iterates over these arguments and adds them to the some string.
+```
+- Basically, `os.environ` is a dictionary with variable names as it keys.
+- You can define your own variables. Use the shell verb **`export`** with that so the variable can "be visible by any command we call":
+```bash
+ export ZAZA=12345
+ ```
+
+### Command-Line Arguments: 
+- **`sys.argv`** from the **`sys`** module is the list of arguments provided to the Python script. The name of the script is always the first element in this variable.
+
+### Exit Statuses:
+- A shell program returns **exit status** which tells the shell and us if it executed successfully or not. If the exit status is 0, the program has executed successfully. If it's not 0, some error has occurred. In an automated world, exit statuses allow it to see if we can retry running the program or do something to fix the cause of the failure.
+- The Unix shell *variable* **`$?`** (dollar sign is the Unix variable indicator) holds the value of the last executed command. You can see its value by echoing it:
+```bash
+echo $?
+```
+- In Python, you can specify an exit status in the **`sys.exit(<exit_status_value>)`** function. Programs that run successfully always return 0, by default. You'd usually supply exit status values in case of errors as part of conditional or whatever!
+
+### `eval()`:
+- `eval()` is another way of getting user input just like `input()`, but instead of treating the input as a raw string, it would instead evaluate it if it is a valid Python expression.
+
+### Subprocesses:
+- One way to call system commands from python is the following:
+```py
+import os
+
+os.system('date')
+```
+- What seems more *pythonic* is the using the **`subprocess`** module instead:
+
+```py
+import subprocess
+
+result = subprocess.run(["ls", '-al'])
+
+print(result.returncode)
+```
+- The **`subprocess.run()`** method takes a list of strings which represent the command and its arguments and options.
+- The object return by `run` has the `returncode` attribute which is the exit status of the run subprocess.
+- We use `run` when we only care about the exit status indicating weather the command ran successfully or not. There are other commands that do more when were are concerned by the output of a command.  
+
+#### Capturing Subprocess Output:
+- To actually capture the output of a subprocess, you need to add an optional argument and **`capture_output`** and set it to `True` as in. The object returned by `subprocess.run()` now has an attribute `stdout` which has the output of the run command: 
+```py
+import subprocess
+
+result = subprocess.run(["ls", '-al'], capture_output=True)
+
+print(result.stdout.decode())
+```
+- `stdout` is an array of bytes rather than a proper string. You can convert to a proper string of characters with the `decode()` method.
+- If the script fails, then `stdout` will be empty, and the `stderr` attribute instead capture the error output.
+
+#### Advanced Subprocess Fiddling:
+- The command you want to run as a subprocess might not necessarily live in the current directory, so you will need to join it and some some voodoo with the environment variable. The following example illustrates such a a situations:
+```py
+import os, subprocess
+
+thisEnv = os.environ.copy()
+thisEnv["PATH"] = os.pathsep.join([".." ,thisEnv["PATH"]]) #pathsep supplies appropriate separator based on OS
+
+result = subprocess.run(["py.py"], env=thisEnv) # Notice env parameter?
+```
+- You can equally change current working directory `cwd` to execute commands into different directories.
+- You can also set a `timeout` option to kill a process if it runs more than a specified number of seconds.
+- There is also the shell variable which can be useful but can also pose security risks. I don't know what to do with this. Probably it's explained in next section.
+
+#### Problems with Subprocesses:
+- Subprocesses involve interacting directly with a system which makes dirty and less robust. Baked in functionality that achieve the same results as subprocesses are more robust and portable. If you can avoid subprocesses and use baked in functionality then do that by all means!
+
+## Bash and Bash Scripting:
+- *I am repeating myself a little here*.
+
+### Redirecting IO:
+- Some of the less obvious aspects of IO redirection:
+	- **`someScript.py < someFile.txt`** means the script needs to take its input from the file. Something like the input for the `input` function of Python.
+	- **`someScript.py 2> errorFile.com`** means directs standard error (whose file descriptor is obviously 2) to the named file.
+- You can also pipe the output of one file (including a Python script) into the input of another (including a Python script).
+
+- Imagine you have the following two programs `c.py` and `a.py`:
+```py
+# c.py
+print(333 * 33 + 50000000)
+```
+```py
+# a.py
+print("This is your fucking result: " + input())
+```
+- We can pipe the output of `c.py` into the input of `a.py` as shown here:
+```bash
+c.py | a.py
+```
+- One cool pipeline:
+```bash
+cat someFile | tr ' ' '\n' | sort | uniq -c | sort -nr
+```
+- I just stole this pipeline because it has several useful commands (some of which I saw in the *Unix Programming Environment*):
+	- **`tr ' ' '\n'`** or *translate* replaces spaces with new lines.
+	- **`sort`** sorts lines alphabetically.
+	- **`uniq`** removes redundant adjacent lines. The **`-c`** option records the count of repetitions of a line.
+	- The **`-n`** option on the last sort is for sorting numerically (this is a little ambiguous). The **`-r`** options means sorting in reverse order.
+
+### Signaling Processes:
+- Using Bash or Python or the keyboard, we can send different signals to running processes to stop them, resume them, terminate them, etc. Examples of this are the:
+	- `Ctl+C` command to terminate a running process.
+	- `Ctl+Z` command to stop but not terminate a process.
+	- `fg` command to resume execution of a stopped processes.
+- **`kill`** commands kill a process by taking the process's 'pid'. The following command search for a process containing the word python, and kills the first occurrence of it:
+```bash
+kill $(ps | grep -m1 python | cut -d ' ' -f 1)
+```
+- When you type **`ps ax`** all the processes running in the system are printed to the screen.
+- Some other usefull commands include:
+
+| Command name | What it does |
+| --- | --- |
+| **`chown`** | Change owner of files |
+| **`chgrp`** | Change group of files |
+| **`file`** | Shows type of file |
+| **`head`** | Prints first 10 lines |
+| **`tail`** | Prints last 10 lines |
+| **`less`** | Scrolls through content of a file |
+| **`cut -d " " -f 1`** | Cut line based on a given separator. Prints specified chunk. |
+| **`who`** | Prints logged users |
+| **`uptime`** | Shows how long the computer has been running |
+| **`ps ax`** | Prints all running processes |
+| **`ps e`** | Shows the environment for listed processes |
+| **`fg`** | Makes a stopped or background job to come to foreground |
+| **`bg`** | Makes a stopped job to go to background |
+| **`top`** | Shows processes that consume most of the CPU |
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
