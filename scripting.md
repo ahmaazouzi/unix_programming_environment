@@ -317,6 +317,82 @@ kill $(ps | grep -m1 python | cut -d ' ' -f 1)
 | **`bg`** | Makes a stopped job to go to background |
 | **`top`** | Shows processes that consume most of the CPU |
 
+### Bash Scripting:
+- If you find yourself repeatedly using multiple commands together, it might be advisable to store these commands in a bash script file, something like the following:
+
+```bash
+#!/bin/bash
+
+echo "Starting at + $(date)"
+echo
+
+echo "UPTIME"
+uptime
+echo
+
+echo "WHO"
+who
+echo
+
+echo "PS"
+ps
+echo
+
+echo "Ending at + $(date)"
+```
+
+- You can alternatively do it like this, using comma separators between short and related commands:
+```bash
+#!/bin/bash
+
+echo "Starting at + $(date)"
+echo
+
+echo "UPTIME"; uptime; echo
+
+echo "WHO"; who; echo
+
+echo "PS"; ps; echo
+
+echo "Ending at + $(date)"
+```
+
+#### Variables:
+- A variable is a defined with something like **`variable="value"`**. To access the variable, you prefix its name with a dollar sign **`$variable`**.
+- You need to **`export`** your variable so it's added the current environment. This will make it available to scripts (child processes).
+
+#### Globs:
+- **Globs** in Shell speak refers to something similar to regex meta characters, namely the symbols **`*`** and **`?`** to handle multiple files in different flexible ways. Let's say you want to do something with a set of files whose names share a certain pattern. You can obtain a list of such files with globs. Examples of their use:
+	- **`echo t*`** echoes the names of files starting with `t`.
+	- **`*.*`** all files with an extension.
+	- **`?????`** all files whose names consists of 5 characters.
+	- **`*`** all files. 
+
+#### Bash Conditional:
+- A conditiona is constructed as follows (notice the `then` and `fi` which are not normal in C-like languages like Python):
+```bash
+if grep "some pattern" someFile.bash
+then
+	echo "Found it!"
+else
+	echo "Nothing!"
+fi
+```
+- An alternative one liner is constructed as follows:
+```bash
+if grep "some pattern" someFile.bash ;then echo "Found it!"; else echo "Nothing!"; fi;
+```
+
+#### `test`:
+- The conditionals we saw above act based on the exit status of a command. Sometimes you need to act on some data you provide to the conditional.The **`test`** keyword is used to check conditionals such as equality of variables or values, if a string is empty, etc. The following example is self-evident:
+```bash
+if test ""; then echo "Fully full"; else echo "Empty"; fi
+```
+- A more popular alternative to `test` is surrounding the conditional with brackets and space as in the following example which does the same thing as the last script:
+```bash
+if [ "" ]; then echo "Fully full"; else echo "Empty"; fi
+```
+
 
 
 
