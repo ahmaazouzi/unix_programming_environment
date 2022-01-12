@@ -1,4 +1,46 @@
-## Python and the OS: 
+# Python and Scripting:
+
+## Table of Contents:
+* [Python Scripts](#python-scripts)
+* [Files](#files)
+	+ [Open/close](#open/close)
+	+ [Reading files](#reading-files)
+	+ [Writing to Files](#writing-to-files)
+	+ [Managing Files/Directories](#managing-files/directories)
+	+ [Working with Directories](#working-with-directories)
+	+ [Handling CSV Files](#handling-csv-files)
+* [Regex](#regex)
+	+ [Capturing Groups](#capturing-groups)
+	+ [Splitting](#splitting)
+	+ [Replacements](#replacements)
+* [Managing Data and Processes](#managing-data-and-processes)
+	+ [Environment Variables](#environment-variables)
+	+ [Command-Line Arguments](#command-line-arguments)
+	+ [Exit Statuses](#exit-statuses)
+	+ [`eval()`](#eval())
+	+ [Subprocesses](#subprocesses)
+		+ [Capturing Subprocess Output](#capturing-subprocess-output)
+		+ [Advanced Subprocess Fiddling](#advanced-subprocess-fiddling)
+		+ [Problems with Subprocesses](#problems-with-subprocesses)
+* [Bash and Bash Scripting](#bash-and-bash-scripting)
+	+ [Redirecting IO](#redirecting-io)
+	+ [Signaling Processes](#signaling-processes)
+	+ [Bash Scripting](#bash-scripting)
+		+ [Variables](#variables)
+		+ [Globs](#globs)
+		+ [Bash Conditional](#bash-conditional)
+		+ [`test`](#test)
+		+ [`while` Loop](#while-loop)
+		+ [`for` Loop](#for-loop)
+		+ [Bash Arrays](#bash-arrays)
+
+## Python Scripts:
+- You can turn your Python scripts into executable shell files in the following steps:
+	- Start the file with a _shebang_: **`#!/usr/bin/env python3`**. There are other small variations but I don't know the difference.
+	- Make the file executable throught the shell command **`chmod +x <fileName>`**.
+- Now your python program can be run by typing its name (or name preceded by **`./`**)and pressing TURN.
+- Python and Bash scripts can be combined and used together.
+
 ## Files:
 ### Open/close:
 - We open a file with **`open`** which we can use in one of the following idioms:
