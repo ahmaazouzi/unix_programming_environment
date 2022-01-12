@@ -393,17 +393,65 @@ if test ""; then echo "Fully full"; else echo "Empty"; fi
 if [ "" ]; then echo "Fully full"; else echo "Empty"; fi
 ```
 
+#### `while` Loop:
+```bash
+n=1
+while [ $n -le 5 ]; do
+	echo "Count is $n"
+	((n+=1))
+done
+```
+- Notice how arithmetic expressions are evaluated in bash (between double parentheses).
+- A more involved while loop does actually retry runnng a another script  or command up to a certain number of times if that command fails for some reason like like network down or something:
+```bash
+#!/bin/bash
 
+n=0
+command=$1 # $1, $2 etc. refer to argument 1, argument 2, etc which is exit status of run program 
 
+while ! $command && [ $n -le 5 ]; do # Command is input and is rerun when it's not 0
+    sleep $n 
+    ((n+=1)) # sleep value keeps growing
+    echo "Retry #$n"
+done
+```
+- You can test or mock the behavior of the last program with the following script:
+```py
+#!/usr/bin/env python
 
+import sys, random
 
+value = random.randint(0,5)
+print("Returning: " + str(value))
+sys.exit(value)
+```
 
+#### `for` Loop:
+- The following loops is over the list `a b c d`:
+```bash
+for item in a b c d; do
+	echo $item
+done
+```
+- The following loop is over files using globs:
+```bash
+for file in *.sh; do 
+	name=$(basename "$file" .sh)
+	mv "$file" "$name.bash"
+done
+```
+- Notice the dollar sign preceding a command surrounded by parentheses. We can do these when we want to store the result of running a command in a variable or if we cant to echo that result. We might do it in other situations.
 
+#### Bash Arrays:
+```bash
+myArray=(1 2 3 4 5) # Create array
 
+myself+=(1000) #append alement to array
 
+# loop over the array
+for i in ${myArray[@]}; do # @ loop till last element in array.
+	echo $((i * 3));
+done;
+```
 
-
-
-
-
-
+تم بحمد الله
