@@ -17,7 +17,7 @@
 	+ [Environment Variables](#environment-variables)
 	+ [Command-Line Arguments](#command-line-arguments)
 	+ [Exit Statuses](#exit-statuses)
-	+ [`eval()`](#eval())
+	+ [`eval()`](#eval)
 	+ [Subprocesses](#subprocesses)
 		+ [Capturing Subprocess Output](#capturing-subprocess-output)
 		+ [Advanced Subprocess Fiddling](#advanced-subprocess-fiddling)
