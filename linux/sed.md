@@ -1,5 +1,16 @@
 # Sed:
 ## Contents:
+* [Intro](#intro)
+* [Syntax](#syntax)
+* [Shell `sed` Options](#shell-sed-options)
+* [Simple Commands that Only Modify Lines](#simple-commands-that-only-modify-lines)
+* [Commands that Insert Lines](#commands-that-insert-lines)
+* [The **`s`** Command](#the-**s**-command)
+* [Flags](#flags)
+* [Addresses and Ranges](#addresses-and-ranges)
+* [Command Grouping with `{}`](#command-grouping-with-{})
+* [Pattern Space and Hold Buffer](#pattern-space-and-hold-buffer)
+* [Some Weird Corners](#some-weird-corners)
 
 ## Intro:
 - **`sed`** is a Unix program which can also be considered a language in itself. It's not very precisely defined and its implementations across Unix-like systems have differences that are mostly trivial, but one should still be aware of them. This document will strictly focus on the GNU specification of `sed`.
@@ -44,7 +55,7 @@ sed 's^a^b^g'
 | --- | --- | 
 | **`-e`** | Allows running multiple sed commands |
 | **`-f`** | For executing commands from a sed scriptfile  **`sed -f scriptfile file`**|
-| **`i`** | Changes a file in place (instead of printing to standard output) |
+| **`-i`** | Changes a file in place (instead of printing to standard output) |
 | **`-n`** | Doesn't print output unless otherwise specified in the script |
 | **`-r`** | Uses extended Perl regex instead of the primitive sed regexes |
 
@@ -115,6 +126,11 @@ sed '/^foo/ sed/foo/bar/' file # Match only lines starting foo and change foo to
 	- With numbers as in: `sed '1,4 sed/foo/bar/' file`
 	- With regexes `sed '/AAA/BBB/ sed/foo/bar/' file`.
 - Ranges will also include the lines where the addresses match. There are tricks to exclude those lines, but I will not cover those here. 
+- You can also use a custom delimiter for regex address specifier. Just make sure you put a backslash before the first delimiter. The following two commands are identical:
+```bash
+sed '/Mor/ s/Morocco/Maroc/g' file
+sed '\_Mor_ s_Morocco_Maroc_g' file2
+```
 
 ## Command Grouping with `{}`:
 - What is important about the braces is that they define a scope where commands would have an effect. They are usually used to delimit a scope after an address/restriction as in:
@@ -137,7 +153,6 @@ H' File
 | **`N`** | Join the current and next lines into one so you can treat the two as one. You can perform matching and replacement on a pattern that spans these two lines. |
 | **`P`** | Prints the pattern space until the first new line. This is in a line that consists of two lines that were joined by `N`. |
 | **`D`** | Deletes the first line in the pattern space. |
-
 
 - If you place lines in the **hold space**, lines stay there and don't disppear because of line changes.
 
