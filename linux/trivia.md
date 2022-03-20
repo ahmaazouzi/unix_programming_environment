@@ -7,7 +7,7 @@
 | Desk environment | Characteristics |
 | --- | --- |
 | **GNOME** | Is stable and meant for professionals |
-| **KDE** | Bells and whisltes |
+| **KDE** | Bells and whistles |
 | **Xfce** | Mean to run on slow systems |
 | **LXDE** | Runs fast even in low-powered systems |
 
