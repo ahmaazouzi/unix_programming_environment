@@ -161,8 +161,7 @@ echo "I am $[2022 - 1953] old"
 | **`env`** | Show so-called environment variables. |
 
 - **Environment variables** are the ones exported to any new shell you open. They are not ephemeral as the variables you create on a shell and that disappears once you exit that shell. Environment variables store a lot of useful information about your system like the username, shell prompt, OS type, etc.
-- Some very common environment variables are:
-	- **`PATH`**, **`HOME`**, **`PWD`**, **`HISTFILE`**, **`HISTFILESIZE`**, **`PS1`**, **`TMOUT`**, **`SHLVL`**.
+- Some very common environment variables are: **`HOME`**, **`HISTFILE`**, **`HISTFILESIZE`**, **`PATH`**, **`PS1`**, **`PWD`**, **`SHLVL`**, **`TMOUT`**, etc.
 
 ### Aliases:
 - **Aliases** might be one of the most useful features of a Unixy systems. An alias is a shortcut to  command or set of commands along with arguments and options. Setting aliases will save you a lot of typing and having to search how a rarely used and complicated command is used. 
@@ -175,7 +174,132 @@ echo "I am $[2022 - 1953] old"
 
 
 ### Setting Shell Environment:
--
+- If you create new variables or aliases you'd use them in your current shell, but they'd disappear after you exit the current shell. They are also not available in the child shells of the current shell. We can make such settings persist through the use of **shell configuration files**. There are several of these files in a given system. Some of these files determine how the shell works for every user of the system, while others only apply to a given user (The use of tilde **`~`** in the table indicates that some files are user-related rather than available systemwide):
+
+| File | Action |
+| --- | --- |
+| **`/etc/profile`** | Sets shell environment for every user, and executes when you first login. It does a lot of crazy stuff and sets paths, etc. |
+| **`/etc/bashrc`** | Runs for all users each time they open a new shell. It sets the default prompts and might add some aliases. It can be overridden by **`~/.bashrc`** |
+| **`~/.bash_profile`** | Used to set information specific to a given user. It runs once when the user logs in. It's ideal for setting own environment variables because it's inherited by future shells. |
+| **`~/.bashrc`** | Specific to bash shells. Read every time you open a new bash shell. Ideal for aliases. |
+| **`~/.bash_logout`** | It executes when you logout. It just clears your screen. |
+
+- As a noob might just stick to editing the shell configuration files in her home directory. You can add you aliases and variables to one of them and they should be available depending on their type as explained in the table above. 
+- To make new settings available in the current shell, you use the **`source`** command as in:
+```sh
+source .bashrc
+```
+
+#### Setting Shell Prompt:
+- This is something a regular person would take for granted and never bother customizing, but Linux heads can spend days and weeks diving into some obscure voodoo to make their shell prompts look the way they want. Well, to be fair to them, it can be boring to have a screen with just white or green text on a black background. Some of the less boring shells come with some invisible text colors. I personally cannot stand dark purple text on a black background, so this is a great learning exercise. I've actually figured how to do change colors on parts of the bash shell. I tried doing it before but it was like total magic for me.
+- A shell prompt can come out of the box in different shapes and colors. Some would just have a a white path followed by a dollar sign like:
+```
+~ $
+```
+- Or:
+```
+~/Desktop $
+```
+- Others can have a date, a username, a hostname. Fedora has the following default prompt:
+```
+[am@cat bin] $
+```
+- Some are colored and others are not. Anyways, in the fedor example we can see the that it consists of brackets enclosing the user name followed by an `@`, the host name and the current directory. The brackets are followed by a space and a dollar sign. To get this very configuration, we can set the `PS1` variable to the following value:
+```sh
+PS1="[\u@\h \W] $"
+```
+- This looks more cryptic than regex. The brackets, the dollar sign and the `@` are used literally, but the characters preceded by a backslash are special characters and mean the following:
+	- **`\u`** for username. This grabs the current username from environment variables and plucks it into the prompt.
+	- **`\h`** for the current hostname.
+	- **`\W`** for the current directory.
+- The following table lists the prompt special characters:
+
+| Special characters | Meaning |
+| --- | --- |
+| **`\!`** | Current command history number, for whole history. |
+| **`\#`** | Current command number, for active shell only. |
+| **`\$`** | shows user prompt `$` or root prompt`#` bassed on how you're logged in |
+| **`\W`** | Current working directory, not the whole path. |
+| **`\[`** or **`\[\033`** | Signals the start of a sequence of non-printing characters. These are used for control such as changing color, having a blinking effect, or making characters bold. |
+| **`\]`** or **`m\]`**| This closes the sequence of non-printing characters. |
+| **`\\`** | Displays a backslash. |
+| **`\d`** | Displays today's date in the format `Mon Mar 21`. |
+| **`\h`** | Displays hostname. |
+| **`\n`** | Creates a new line. |
+| **`\nnn`** | Displays a character whose octal value is `\nnn` |
+| **`\s`** | Current shell name, e.g. `bash`, `sh` |
+| **`\t`** | Current time `hh:mm:ss` |
+| **`\u`** | Current username |
+| **`\w`** | Full path of current working directory. |
+
+- Again to ensure the persistence of the new `PS1`, we need to place it in `~/.bashrc` or `~/.bash_profile`.
+- I just learnt how to also change colors of different parts of the prompt. To add a new color you need this pattern **`\[\033[<COLORZGOESHERE>m\]`**. The **`<COLORZGOESHERE>`** indicates where the color goes. These colors are indicated by numerical values, so **`\[\033[0;31m\]`** is for red, **`\[\033[0m\]`** is for white, **`\[\033[0;36m\]`** is for cyan, etc. The color would affect the values around itt, but if a part of the prompt surrounded by 2 colors, it is affected by the one to its left. The colors you add to your prompt are kinda meant to affect what goes to their right just like css. The following example has 2 red brackets surrounding a cyan date. It also has space followed by a white dolalr sign:
+```sh
+ $PS1='\[\033[0;31m\][\[\033[0;36m\]\d\[\033[0;31m\]] \[\033[0m\]$ '
+ ``` 
+ - The following is a basic list of colors (They are not all that consistent between different systems, bu they worked for mine):
+
+| Color | Value |
+| --- | --- |
+| Black | 0;30 |
+| Blue | 0;34 |
+| Green | 0;32 |
+| Cyan | 0;36 |
+| Red | 0;31 |
+| Purple | 0;35 |
+| Brown | 0;33 |
+| LightGray | 0;37 |
+| Dark Gray | 1;30 |
+| Light Blue | 1;34 |
+| Light Green | 1;32 |
+| Light Cyan | 1;36 |
+| Light Red | 1;31 |
+| Light Purple | 1;35 |
+| Yellow | 1;33 |
+| White | 1;37 |
+
+- The reason why I'm wasting time on this is that I feel like it can help me customize vim and the shell in general, especially with the invisible colors like dark purple and invisible cursor I currently have in vim.
+- Another cool thing is that we can run commands using the expanding syntax inside the prompt. We can show the date or run `pwd` as alternatives to what's already offered to us by special characters or do anything we want as the following examples show:
+```sh
+PS1='[\$(date)] \$'
+PS1='[\$(pwd)] \$'
+```
+
+#### Important Environment Variables to Consider:
+- Important variables that need to be added to the environment include:
+	- **`TMOUT`**: This allows the shell to logout after a given period of inactivity, something like 30 minutes, which is set using `TMOUT=1800` (using seconds).
+	- **`PATH`**: If you have commands in some frequently used directory, you can add it to the path and export that path as in **`PATH=$PATH:/someDir ; export PATH`**. 
+	- **`WHATEVER`**: You can name long paths that you use frequently and add them to your environment!
+
+### Info about Commands, Man Pages, Help:
+- Other than `man` (for manual pages), there are other ways to get information about available commands:
+	- First thing the noob does is check their **`$PATH`** variables to find commands and their locations. One can run `man` or `--help` on these commands.
+	- The **`help`** command gives you info about shell built-ins.
+	- Type the name of command followed by **`--help`** as in **`less --help`** to get information about a command. This might help with things not found in man pages.
+	- **`info`** Has fewer items than man pages, but it might have more info on an item.
+- **`man`** is the most used way of getting information about commands and other things in Linux. A man page can be in one of 8 sections. The following tables lists these sections:
+
+| Section number | Section name | Description |
+| --- | --- | --- |
+| 1 | User commands | Commands that can be run by a regular user. |
+| 2 | System calls | Functions for calling the kernel to do something. |
+| 3 | C library functions | C standard library |
+| 4 | Devices and special files | device files and all |
+| 5 | File formats and conventions |  |
+| 6 | Games |  |
+| 7 | Miscellaneous | Protocols, character sets, etc.  |
+| 8 | System administration tools and daemons | Commands requiring root privileges to run. |
+
+- To find in which section a command or something is (one thing can be in multiple sections) and also to get a summary of what it does, we use `man` with the **`-k`** option:
+```sh
+man -k crontab
+```
+- To read the man page at a specific section if it exists, we use its section number as in:
+```sh
+man 5 crontab
+```
+
+
 
 
 
