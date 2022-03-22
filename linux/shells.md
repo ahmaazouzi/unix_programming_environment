@@ -1,3 +1,22 @@
+# Setting the Shell:
+## Table of Contents:
+* [The Shell](#the-shell)
+* [Commands and All](#commands-and-all)
+	+ [Command Syntax](#command-syntax)
+	+ [Locating Commands](#locating-commands)
+	+ [Command types](#command-types)
+* [History and Rerunning Commands from the Past](#history-and-rerunning-commands-from-the-past)
+* [Connecting and Expanding Commands](#connecting-and-expanding-commands)
+	+ [Connecting Commands](#connecting-commands)
+	+ [Expanding](#expanding)
+* [Using Shell Variables](#using-shell-variables)
+	+ [Shell Variables](#shell-variables)
+	+ [Aliases](#aliases)
+* [Setting Shell Environment](#setting-shell-environment)
+	+ [Setting Shell Prompt](#setting-shell-prompt)
+	+ [Important Environment Variables to Consider](#important-environment-variables-to-consider)
+	+ [Info about Commands, Man Pages, Help](#info-about-commands-man-pages-help)
+
 ## The Shell:
 - **`bash`** is the default shell.
 - You can use a different shell by simply typing its 'name', such as **`sh`** or **'csh'**. When done, type **`exit`** to go back to the default shell **`bash`**.
@@ -12,6 +31,8 @@
 ```sh
 su -s
 ```
+
+## Commands and All:
 - Some of the common  and basic commands include:
 
 | Command | Action |
@@ -89,7 +110,7 @@ which is /bin/which
 ```
 - There is talk of a **`locate`** command, but it doesn't seem to be built into the Ubuntu distribution. 
 
-### History and Rerunning Commands from the Past:
+## History and Rerunning Commands from the Past:
 - The shell remembers commands you typed in the past and has comes with functionality that allows you to rerun these commands easily. This is most useful when these commands are long with several arguments and options. 
 - This is largely achieved through the **shell history** which is a list of commands you ran in the past. The **`history`** commands prints this list to standard output.
 - You can access the most recent command from the shell history by hitting the up arrow. the last command will appear. Combine this with a few keystrokes to edit the commands and speed up your work. The following table shows some of these powerful shortcuts
@@ -128,7 +149,7 @@ which is /bin/which
 - This whole history is stored in a file in the home directory of the user called **`.bash_history`**. ***Ahhah, that's what it is!!!***
 - The shell history is a useful feature, but it can be exploited by malicious actors especially when the user has root access and administrative roles. An admin might have to clear their history and should probably disable root user history. Disabling history for root can be done by setting **`HISTFILE`** to **`/dev/null`** or leaving **`HISTSIZE`** blank. 
 
-
+## Connecting and Expanding Commands:
 ### Connecting Commands:
 - Shell **metacharacters** allow you to combine and connect commands in some very powerful ways. They include:
 
@@ -151,6 +172,7 @@ echo "I am $[2022 - 1953] old"
 ```
 - When you access a shell variable to read it, you are actually expanding it, hence the dollar sign.
 
+## Using Shell Variables:
 ### Shell Variables:
 - The following two commands show you certain types of variables:
 
@@ -173,7 +195,7 @@ echo "I am $[2022 - 1953] old"
 | **`unalias`** | Removes an alias |
 
 
-### Setting Shell Environment:
+## Setting Shell Environment:
 - If you create new variables or aliases you'd use them in your current shell, but they'd disappear after you exit the current shell. They are also not available in the child shells of the current shell. We can make such settings persist through the use of **shell configuration files**. There are several of these files in a given system. Some of these files determine how the shell works for every user of the system, while others only apply to a given user (The use of tilde **`~`** in the table indicates that some files are user-related rather than available systemwide):
 
 | File | Action |
