@@ -155,7 +155,7 @@ which is /bin/which
 
 | Metacharacter(s) | Significance |
 | --- | --- |
-| **`|`** | Inputs into a command the output of another command |
+| **`\|`** | Inputs into a command the output of another command |
 | **`;`** | Allows running multiple commands sequentially in one line |
 | **`&`** | Works like **`;`**, but command 2 doesn't wait for the previous command to end. Closing the shell will still kill the long running command 1 |
 
