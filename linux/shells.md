@@ -1,4 +1,4 @@
-# Setting the Shell:
+# The Shell and All:
 ## Table of Contents:
 * [The Shell](#the-shell)
 * [Commands and All](#commands-and-all)
@@ -320,24 +320,6 @@ man -k crontab
 ```sh
 man 5 crontab
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
