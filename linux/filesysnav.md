@@ -1,5 +1,22 @@
 # Navigating the Filesystem:
 ## Table of Contents:
+* [Table of Contents](#table-of-contents)
+* [Basics](#basics)
+* [Basic Filesystem Navigation Notions](#basic-filesystem-navigation-notions)
+* [Metacharacters and Operators](#metacharacters-and-operators)
+	+ [File-matching Metacharacters](#file-matching-metacharacters)
+	+ [File-redirection Metacharacters](#file-redirection-metacharacters)
+	+ [Here Text (Here Document)](#here-text-(here-document))
+	+ [Brace-expansion Characters](#brace-expansion-characters)
+* [Listing Files and Directories](#listing-files-and-directories)
+	+ [Important `ls` options](#important-ls-options)
+	+ [More Special Info Given in the Column 1](#more-special-info-given-in-the-column-1)
+* [File Permissions and Ownership](#file-permissions-and-ownership)
+	+ [Changing File Permissions with **`chmod <numbers>`**](#changing-file-permissions-with-**chmod-numbers**)
+	+ [Changing File Permissions with **`chmod <letters>`**](#changing-file-permissions-with-**chmod-letters**)
+	+ [Setting Default File Permissions with **`umask`**](#setting-default-file-permissions-with-**umask**)
+	+ [Changing File Ownership](#changing-file-ownership)
+* [Moving, Copying and Removing Files](#moving-copying-and-removing-files)
 
 ## Basics:
 - I keep seeing the Unix/Linux directory hierarchy all over the place and I kinda feel like certain files and things need to be located in certain parts of this hierarchy, but I'm just not sure!! 
