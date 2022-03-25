@@ -120,7 +120,7 @@ sed '$ d' file  # Deltes last line
 ```
 - A regex as an address:
 ```bash
-sed '/^foo/ sed/foo/bar/' file # Match only lines starting foo and change foo to bar
+sed '/^foo/ s/foo/bar/' file # Match only lines starting foo and change foo to bar
 ```
 - You can also select ranges of lines:
 	- With numbers as in: `sed '1,4 sed/foo/bar/' file`
