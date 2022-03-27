@@ -1,5 +1,32 @@
 # Editing, Finding and Searching Text Files
 ## Table of Contents:
+* [Intro](#intro)
+* [Editing Text Files with `vi` and `vim`](#editing-text-files-with-vi-and-vim)
+	+ [Using `vi`](#using-vi)
+		+ [Adding Text](#adding-text)
+		+ [Moving around in Text](#moving-around-in-text)
+		+ [Deleting, Copying and Changing Text](#deleting-copying-and-changing-text)
+		+ [Movement and Editing a Number of Times with Using Numbers](#movement-and-editing-a-number-of-times-with-using-numbers)
+		+ [Pasting (Putting) Text](#pasting-(putting)-text)
+		+ [Repeating Commands](#repeating-commands)
+		+ [Exiting `vi`](#exiting-vi)
+		+ [Other Useful Commands and Tips](#other-useful-commands-and-tips)
+	+ [Skipping around in the File](#skipping-around-in-the-file)
+	+ [Searching for Text](#searching-for-text)
+	+ [Using "ex mode"](#using-ex-mode)
+	+ [Learning more about `vi` and `vim`](#learning-more-about-vi-and-vim)
+* [Finding Files](#finding-files)
+	+ [Using `locate` to Find Files by Name](#using-locate-to-find-files-by-name)
+		+ [Using `locate`](#using-locate)
+	+ [Searching for Files with `find`](#searching-for-files-with-find)
+		+ [Finding Files by Name](#finding-files-by-name)
+		+ [Finding Files by Size](#finding-files-by-size)
+		+ [Finding Files by User](#finding-files-by-user)
+		+ [Finding Files by Permission](#finding-files-by-permission)
+		+ [Finding Files by Date and Time](#finding-files-by-date-and-time)
+		+ [Using `-not` and `-or` when Finding Files](#using--not-and--or-when-finding-files)
+		+ [Finding Files and Executing Commands](#finding-files-and-executing-commands)
+	+ [Searching in Files with `grep`](#searching-in-files-with-grep)
 
 ## Intro:
 - This document will tackle three basic topics:
@@ -40,7 +67,7 @@
 | **`l`** | Move right one char at a time.  |
 | **`j`** | Move down one char at a time.  |
 | **`k`** | Move up one char at a time.  |
-| **Spacebar** | Move forward one char at a time. |
+| **`Spacebar`** | Move forward one char at a time. |
 | **`Backspace`** | Move back one char at a time. |
 | **`w`** | Move to the beginning of the next word (delimited by spaces, tabs and punctuation). |
 | **`W`** | Move to the beginning of the next word (delimited by spaces and tabs only). |
@@ -148,13 +175,10 @@
 | **`?`** | Search backward relative to the current cursor position. |
 
 - Examples include:
-
-| Example |
-| --- | --- |
-| **`/Ahmed`** |
-| **`?Saqqa`** |
-| **`/S*ra`** |
-| **`?[Pp]resident`** |
+	- **`/Ahmed`**.
+	- **`?Saqqa`**.
+	- **`/S*ra`**.
+	- **`?[Pp]resident`**.
 
 - After typing the search term, press enter. To continue searching for other occurrences of the same pattern use:
 
@@ -178,18 +202,140 @@
 ### Learning more about `vi` and `vim`:
 - To learn more about `vim` and `vi`, type **`vimtutor`** which steps you through a fun tutorial of vim and its great features.
 
-
-
-
 ## Finding Files:
+- The most basic Linux installation can have many many files in it you need a way to search these files and find what you need. There are a few utilities that do just that and more:
+	- The **`locate`** utility allows you to find files by name.
+	- The **`find`** command can find files based on many attributes.
+	- The **`grep`** allows you to search files themselves for a given pattern. 
+
 ### Using `locate` to Find Files by Name:
+- The **`locate`** utility is not included in Ubuntu (might be in RHEL and Fedora).
+- A closely related command is **`updatedb`**. In some systems it's scheduled to run daily.
+- Our command **`locate`** searches this database for a file name.
+- The sturdier command `find` does all what `locate` can do and much more. Why use `locate`? This command has both advantages and disadvantages. It is much faster to locate files with this command because we are searching a database rather than searching the system. This database is populated once a day at a non-busy time.
+- Disadvantages include the fact that `locate` reflects the state of the system when the database was last updated. Any files added after that update will not be located, and you might see files that don't exist anymore. 
+- `locate` might also not include certain files. By default remotely mounted filesystems and those on CDs, etc. are not included. You can use some configuration file `/etc/updatedb.conf` to  not include other files or types of files in certain locations.
+- Permissions are also preserved when using locate. A regular user cannot see files that can only be seen bu a sudoer!
+- A string being searched can appear anywhere in the file paths returned. You can also use shell metacharacters such as **`*`**.
+
+#### Using `locate`:
+- Examples of `locate` usage include:
+```bash
+locate  locate *twitter*pycache*
+locate passwd
+```
+- A useful option is **`-i`** for ignoring case.
+- `locate` only search of the given pattern in paths, and not necessarily a file name. If you type `bash`, you'd get different levels of directories containing the string `bash` such as `bash-completion`, `bash-whatever` and files like `.bashrc`, etc.
+
 ### Searching for Files with `find`:
+- **`find`** is the more robust file finding command mainly because it allows you to search for files based on a variety of attributes. It also allow you to act on the files you find using the **`-exec`** or **`-okay`** options (we will see these later).
+- `find` is slower than `locate` because it searches the actual system rather than a database. However, you get an up-to-date view of the system. To mitigate the slowness problem, you can limit the part of the filesystem you'd search. 
+- `find` can search files using its filename, ownership, permission, size, modification times and other things. The attributes can also be combined to polish and zero the search down. 
+- Examples of using `find` include:
+```sh
+ find
+ find /etc
+ find $HOME -ls
+ ``` 
+ - By running `find` without options or arguments, `find` finds all the files in the current directory, including those in subdirectories. It is somehow similar to running `ls -R` but not quite. The output filenames are all full paths to each file and directory.
+ - You can also specify a certain point in the filesystem where to search such as `/etc` in our example. 
+ - `find` also respects permissions so a regular users cannot see files visible under root only. Such files or directories result in `permission denied` messages.
+ - Using the **`-ls`** option make `find` act like `ls -l`. It list file paths along with permissions, size, etc. 
+
 #### Finding Files by Name:
+- To find a file by name, you'd use:
+	- **`-name`** which can take either the exact name of a file, or a file matching pattern. It is case-sensitive.
+	- **`-iname`**: Same as `-name` but ignores case.
+- It might be a good idea to enclose patterns in quotes. 
+- Directories cannot be found with this option (unless maybe combined with some other option).
+
 #### Finding Files by Size:
+- The **`-size`** option allows you to search files that are equal to, smaller or larger than a given size. Seems to only consider Megabytes (**`M`**) and Gigabytes (**`G`**) as units:
+```
+find -size +10M
+find -size -1G
+find -size 0M
+```
+
 #### Finding Files by User:
+- You can also search files by specifying the **`-user`** or **`-group`** that owns it. You can also use the **`-not`** and **`-or`** option to refine the search further:
+```sh
+find / -not -user root
+find -user am or -user sam
+find -group it
+```
+
 #### Finding Files by Permission:
+- Searching files by permission can be crucial or at least useful and convenient for those concerned with security, both malicious attackers and ethical defenders. You can quickly find files with open and dangerous permissions throughout your system in a particular where you've created new files. 
+- There are some differences between what I'm reading and what I see on the Ubuntu system. I'll stick to Ubuntu.
+- You can search files by permissions using both octals and symbols just as you'd do with setting permissions through `chmod`. 
+- Searching by permissions is done with the **`-perm`** option which has three varieties or modes:
+	1.  or : All 3 bits much match 
+
+| Octal | Symbolic | Meaning |
+| --- | --- | --- |
+| **`664`** | **`u=rw,g=rw,o=r`** | The full number must match. |
+| **`-222`** |  **`-u=w,g=w,o=w`** | If any of the bits is present, there is a match. `-000` will match anything. `-222` matches all writables including `222`, `333`, `666`, `777`, etc. All three bits should be present |
+| **`/222`** | **`/a=w`** | If any one bit is in any of the three numbers there is a match. `/222` will match `112`, `121`, `211`, et, etc. |
+
+- An example:
+```sh
+find /somewhere -perm /222 -type f
+find /somewhere -perm /a=w -type f
+```
+- The previous example has two examples that do the exact same thing. It checks if all files are read-only in `/somewhere`.
+
 #### Finding Files by Date and Time:
-#### Using `not` and `or` when Finding Files:
-#### Finding Files and Executing Commands: 
+- The date field in each file is changed whenever the file is accessed, changed or its metadata has been changed. This is important for security and other things. Examples of when you might need to search files by date and time include:
+	- You've recently changed a configuration file somewhere, but forgot which it was. You can go to where you think the file is, something like `/etc` and search that location by time.
+	- You think you might have been hacked, so you go check sensitive locations and find of permissions were changed on files in the last However many days.
+	- You can find if there are unnecessary files that you haven't accessed in a very long time so you can archive or delete them.
+- You can search files by two time units: days `date` and minutes `min`.  You can also search if the file was accessed, changed or has its metadata modified. These are done with the following options:
+
+| Option | Description |
+| --- | --- |
+| **`-atime`** | Days since last accessed |
+| **`-ctime`** | Days since last changed |
+| **`-mtime`** | Days since last metadata changed |
+| **`-amin`** | Minutes since last accessed |
+| **`-cmin`** | Minutes since last changed |
+| **`-mmin`** | Minutes since last metadata changed |
+
+- Another detail about these options is that the time can be preceded by:
+	- A plus **`+`**  Any time before that minute in the past resulting from subtracting the given days/minutes from now.
+	- A minus **`-`** Now minus the number of days or minutes.
+- Examples include:
+```bash
+find /etc/ -cmin -10 # Find if a file in /etc has been modified in the last 10 minutes
+find /idle -ctime +300 # See if file has last been accessed more than 300 days ago.
+``` 
+
+#### Using `-not` and `-or` when Finding Files:
+- We've seen **`-not`** and **`-or`** earlier. These two options allow you to construct complex queries to really refine a search:
+```sh
+find -user am -or -user sam -or -size +1M
+```
+
+#### Finding Files and Executing Commands:
+- There are also convenient options that allows you to run commands on found files:
+	- With **`find [options] -exec command {} \;`**, you'd execute the command without first prompting.
+	- With **`find [options] -ok command {} \;`**, you will need to okay dangerous commands.
+- Examples include:
+```sh
+find -type f -exec cp {} ../l/ \;
+```
 
 ### Searching in Files with `grep`:
+- I use **`grep`** regularly, but not to its full potential.
+- In addition to searching one or more files using `grep`, you can also search directory structures recursively.
+- You can also list just names of files containing the pattern instead of all the lines.
+- The Following table show examples of how `grep` is used in Linux:
+
+| Example | Action |
+| --- | --- |
+| **`grep -i sth *`** | Search all files in current directory for pattern `sth` regardless of case. |
+| **`grep -vi sth someFile.txt`** | Print all lines in `someFile.txt`that don't contain case-insensitive variations of `sth` |
+| **`grep -rli mama lala/`** | Search files in directory `lala/` for pattern `wawa`  recursively using `-r` option. List only files containing the pattern `-l`. `-i` is for ignoring case. |
+
+
+
