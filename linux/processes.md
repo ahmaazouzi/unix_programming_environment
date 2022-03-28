@@ -136,6 +136,7 @@ fg %1
 | **`bg %<stopped job>`** | Make a stopped job run in the background. |
 | **`jobs`** | List jobs (stopped processes/processes running in background). |
 
+
 ## Killing and Renicing Processes:
 ### Killing Processes with `kill` and `killall`:
 - **`kill`** is used to kill a process by its PID.
