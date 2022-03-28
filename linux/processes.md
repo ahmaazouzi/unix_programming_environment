@@ -144,7 +144,7 @@ fg %1
 - These two commands don't just kill processes but can also send other signals. For more information about singal see **`man 7 signal`**. Signals are represented by both numbers and names as the following table shows:
 
 | Signal  | Number | Action |
-| --- | --- |
+| --- | --- | --- |
 | **`SIGHUP`** | **`1`** | Hang-up detected on controlling terminal or death of controlling process. (*WHAT?!*) |
 | **`SIGINT`** | **`2`** | Interrupt from keyboard |
 | **`SIGQUIT`** | **`3`** | Quit from keyboard |
@@ -153,6 +153,7 @@ fg %1
 | **`SIGTERM`** | **`15`** | Termination signal (*Forced kill?!*) |
 | **`SIGCONT`** | **`18`** | Continue a stopped process |
 | **`SIGSTOP`** | **`19`** | Stops a process |
+
 
 #### Using `kill` to Signal Processes by PID:
 - To kill a process, let's a rogue one, we find its PID using `top` or `ps`, then give it to `kill` to kill it. This can be done with either of these three variations of the command:
