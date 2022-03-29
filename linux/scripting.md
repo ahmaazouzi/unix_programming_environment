@@ -314,7 +314,7 @@ print(333 * 33 + 50000000)
 ```
 ```py
 # a.py
-print("This is your fucking result: " + input())
+print("This is your result: " + input())
 ```
 - We can pipe the output of `c.py` into the input of `a.py` as shown here:
 ```bash
