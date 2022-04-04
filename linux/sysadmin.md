@@ -1,5 +1,17 @@
 # What Linux System Administration Is all about:
 ## Table of Contents:
+* [Intro](#intro)
+* [System Administration](#system-administration)
+	+ [Root](#root)
+	+ [What the Admin Can Do](#what-the-admin-can-do)
+* [Root](#root)
+	+ [Using **`su`** and Becoming Root in Ubuntu](#using-**su**-and-becoming-root-in-ubuntu)
+	+ [Granting Administrative Access](#granting-administrative-access)
+* [Administrative Commands, Configuration Files, and Log Files](#administrative-commands-configuration-files-and-log-files)
+	+ [Administrative Commands](#administrative-commands)
+	+ [Administrative Configuration Files](#administrative-configuration-files)
+	+ [Administrative Log Files](#administrative-log-files)
+
 ## Intro:
 - We can think of a system administrator as the person who controls and sets limits on how the system is used. Such a person is especially important for Linux systems which inherited from their Unix forefathers the fact of being multi-user where multiple users run multiple programs simultaneously and interact with networks and all. There are dangers and problems that come with all this flexibility and complexity. 
 - A system administrator can be done by a user who is logged in as a *superuser* (*root user*). The root user has extra privileges and have total control over the system. It can add and remove users and set what they can do. It is also the only one that can do certain things like installing software and changing some configurations.
@@ -68,7 +80,60 @@ sam     ALL=(ALL:ALL) ALL
 ```
 - Here we are granting all administrative access to the user sam. It is possible to grant sudo only on certain commands, but I don't know how to do that!!
 
+## Administrative Commands, Configuration Files, and Log Files:
+- Administering a Linux system is done with the help of a bunch of commands, configuration files and log files that are available in a typical Linux in certain places regardless of the distribution. Let's have a quick look att these and how to use them effectively.
 
+### Administrative Commands:
+- Two important locations where administrative commands are stored include:
+	- **`/sbin`** which includes commands needed to boot the system such as commands for checking the filesystem.
+	- **`/usr/sbin`** contains commands for such tasks  as managing user accounts or processes that have open files. Processes that run as daemons are also found here.
+- Some administrative commands are in `/bin` and `/usr/bin` because they are meant to be used by both regular users and administrators. A good example is `mount` which a regular user can run to see/list mounted filesystems, but an admin can actually use it to mount a filesystem. 
+- Names of administrative commands can be found in **`/usr/share/man/man8`**. 
+- It's recommended to add one's own administrative commands to **`usr/local/bin`** or **`/usr/local/sbin`** and add these folders to the path if they are not already there. These commands can overrides commands with the same names in other directories.
+
+### Administrative Configuration Files:
+- Administrative tasks and configurations are best done using **configuration files** which are basic text files containing commands and information on how services and other things should work in a system. 
+- Configuration files might use well-known formats such as XML but not always. Changing a configuration file can mess things up and you don't know if your changes are correct. However, some software offer utilities for checking if changing configuration files was done correctly.
+- Most configuration files are placed in **`$HOME`** and **`/etc`** directories. Home configuration files are obviously there for controlling a particular user's part of the system, while `/etc/` files have a systemwide effect. Home configuration file names usually start with a dot **`.`** (hence the name *dot files*). Dot files include files like `.bashrc`. 
+- Some important systemwide subdirectories in `/etc` where configuration files are found include:
+
+| Subdirectory | Configuration files |
+| --- | --- |
+| **`/etc`** | Most basic Linux conf files. |
+| **`/etc/cron*`** | Directories containing `crond` setups for hourly, daily, monthly, etc. jobs. |
+| **`/etc/default`** | Default values for several utilities. |
+| **`/etc/apache2`** | Files for controlling apache2 web server behavior. |
+
+- There are many other configuration file locations like the ones listed above.
+- Examples of configuration files found in the `/etc` include:
+
+| Conf file | What it does |
+| --- | --- |
+| **`bash.bashrc`** | Systemwide bash conf. |
+| **`crontab`** | Contains some automated tasks associated with `cron` as well as some variables like `cron`'s shell and its PATH. |
+| **`group`** | Has group names and ids found in the system. |
+| **`gshadow`** | Has group passwords for groups |
+| **`hostname`** | Contains the hostname of the current Linux system. |
+| **`hosts`** | Has IP addresses and host names reachable from the current system. Mostly for systems in a LAN or small private  network. |
+| **`hosts.allow`** | Lists computers allowed to use some TCP/IP services from the current system. |
+| **`hosts.deny`** | Lists computers that are NOT allowed to use some TCP/IP services from the current system. |
+| **`mtab`** | Lists currently mounted filesystems |
+| **`named.conf`** | Contains DNS settings if using one's own DNS server (with `bind` package). |
+| **`passwd`** | Contains information on valid users in the local system. |
+| **`profile`** | Contains systemwide environment for all users. File is read when user logs in. |
+| **`protocols`** | Sets protocol names and numbers from several Internet services. |
+| **`rpc`** | Defines remote procedure call names and numbers. |
+| **`services`** | Defines TCP and UDP service names and their ports. |
+| **`shadow`** | Contains encrypted passwords from users in the `passwd` file. |
+| **`shells`** | Lists shells available in the system and their locations. |
+| **`sudoers`** | Sets who can and who cannot run certain commands using the `sudo` command. |
+| **`rsyslog.conf`** | Defines log messages gathered by `rsyslogd` and which files they are stored in. Log messages are typically stored in **`/var/log`** |
+
+### Administrative Log Files:
+- Logging gives the admin information about errors and fails and also allows him to track suspicious activity. 
+- There are different ways of logging system events such as `rsyslogd` and `syslogd`, but `systemd`systems (whatever that is) are probably the norm today and they gather display log messages using something called **`journalctl`**. By running the **`journalctl`** command you can get logs about the system in different forms. The command has several options and combinations thereof that can be learnt more about in man pages.
+- **`rsyslogd`** gathers and places logs in the **`/var/log`** directory. 
+- We might some of this stuff again in chapters concerned with server administration. 
 
 
 
